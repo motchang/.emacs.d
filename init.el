@@ -477,7 +477,7 @@
   (smartparens-mode . t)
   (rustic-lsp-server . 'rust-analyzer)
   (lsp-rust-analyzer-server-command . '("~/.cargo/bin/rust-analyzer"))
-  (rustic-format-trigger . 'on-save)
+  (rustic-format-trigger . 'on-compile)
   (remove-hook 'rustic-mode-hook 'flycheck-mode)
   (push 'rustic-clippy flycheck-checkers))
 
