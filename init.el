@@ -364,7 +364,7 @@
     :custom ((inf-ruby-default-implementation . "pry")
              (inf-ruby-eval-binding . "Pry.toplevel_binding"))
     :hook ((ruby-mode-hook . inf-ruby-minor-mode)
-           (inf-ruby-mode-hook . ansi-color-comit-mode-on))))
+           (inf-ruby-mode-hook . ansi-color-for-comint-mode-on))))
 
 (leaf ruby-block
   :el-get juszczakn/ruby-block
