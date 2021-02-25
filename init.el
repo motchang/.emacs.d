@@ -509,4 +509,6 @@
   :ensure t
   :after caml)
 
+(server-start)
+
 (provide 'init)
