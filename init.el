@@ -165,8 +165,7 @@
 (leaf git-gutter
   :emacs>= 24.3
   :ensure t
-  :custom
-  (git-gutter-mode . 1))
+  :hook (prog-mode-hook))
 
 (leaf git-link
   :emacs>= 24.3
