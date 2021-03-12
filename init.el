@@ -344,6 +344,11 @@
 (leaf nginx-mode
   :ensure t)
 
+(leaf dockerfile-mode
+  :ensure t
+  :mode (("Dockerfile" . dockerfile-mode))
+  )
+
 (leaf apache-mode
   :ensure t)
 
