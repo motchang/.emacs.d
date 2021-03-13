@@ -173,6 +173,10 @@
   :custom
   (git-link-open-in-browser . t))
 
+(leaf find-file-in-repository
+  :ensure t
+  :bind (("C-x f" . find-file-in-repository)))
+
 (leaf company
   :emacs>= 24.3
   :ensure t
