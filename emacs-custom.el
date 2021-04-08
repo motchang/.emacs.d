@@ -40,7 +40,7 @@
  '(imenu-list-size 30 t)
  '(indent-tabs-mode nil)
  '(inf-ruby nil t)
- '(inf-ruby-default-implementation "pry")
+ '(inf-ruby-default-implementation "pry" t)
  '(inf-ruby-eval-binding "Pry.toplevel_binding" t)
  '(ivy-count-format "(%d/%d)")
  '(ivy-ghq-command "~/bin/ghq")
@@ -70,7 +70,7 @@
      ("gnu" . "https://elpa.gnu.org/packages/")
      ("marmalade" . "http://marmalade-repo.org/packages/")))
  '(package-selected-packages
-   '(find-file-in-repository dockerfile-mode bundler dap-mode tuareg apache-mode terraform-mode flycheck-golangci-lint go-mode csv-mode nginx-mode yaml-mode yaml-modde scss-mode sass-mode web-mode rinari js2-mode json-mode rainbow-mode yasnippet-snippets yasnippet migemo string-inflection git-link git-gutter magit rubocopfmt rspec-mode flycheck-pos-tip pos-tip ruby-end robe auto-highlight-symbol prettier-js tide rubocop company-lsp lsp-ui quickrun exec-path-from-shell rustic lsp-mode ace-window counsel posframe amx rainbow-delimiters use-package dracula-theme flycheck macrostep leaf-tree leaf-convert blackout el-get hydra leaf-keywords leaf))
+   '(epa-file twittering-mode find-file-in-repository dockerfile-mode bundler dap-mode tuareg apache-mode terraform-mode flycheck-golangci-lint go-mode csv-mode nginx-mode yaml-mode yaml-modde scss-mode sass-mode web-mode rinari js2-mode json-mode rainbow-mode yasnippet-snippets yasnippet migemo string-inflection git-link git-gutter magit rubocopfmt rspec-mode flycheck-pos-tip pos-tip ruby-end robe auto-highlight-symbol prettier-js tide rubocop company-lsp lsp-ui quickrun exec-path-from-shell rustic lsp-mode ace-window counsel posframe amx rainbow-delimiters use-package dracula-theme flycheck macrostep leaf-tree leaf-convert blackout el-get hydra leaf-keywords leaf))
  '(query-replace-highlight t)
  '(recentf-exclude '(".recentf"))
  '(recentf-max-saved-items 1000)
