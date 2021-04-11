@@ -474,7 +474,8 @@
 
 (leaf json-mode
   :ensure t
-  :after json-reformat json-snatcher)
+  :after js json-reformat json-snatcher
+  :custom (js-indent-level . 2))
 
 ;; -----------------------------------------------------------------------------
 ;; Rust
