@@ -400,7 +400,10 @@
              (flycheck-disable-checker 'ruby-reek))))
 
 (leaf rubocopfmt
-  :ensure t)
+  :ensure t
+  :hook (ruby-mode . rubocopfmt-mode)
+  :custom
+  ((rubocopfmt-include-unsafe-cops . t)))
 
 (leaf rspec-mode
   :ensure t
