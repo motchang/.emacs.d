@@ -7,6 +7,7 @@
    'package-archives '(("org" . "https://orgmode.org/elpa/")
                        ("melpa" . "https://melpa.org/packages/")
                        ("gnu" . "https://elpa.gnu.org/packages/")))
+
   (package-initialize)
   (unless (package-installed-p 'leaf)
     (package-refresh-contents)
@@ -65,7 +66,7 @@
 ;;   :ensure t)
 
 (leaf dracula-theme
-  :when (version<= "24.3" emacs-version)
+  :ensure t
   :config
   (load-theme 'dracula t))
 
@@ -242,17 +243,13 @@
   :custom
   (lsp-inhibit-message . t)
   (lsp-message-project-root-warning . t)
-  (create-lockfiles . nil))
+  (create-lockfiles . nil)
+  (lsp-prefer-capf . t))
 
 (leaf lsp-ui
   :emacs>= 26.1
   :ensure t
   :after lsp-mode markdown-mode)
-
-(leaf company-lsp
-  :emacs>= 25.1
-  :ensure t
-  :after lsp-mode company)
 
 (leaf dap-mode
   :emacs>= 26.1
