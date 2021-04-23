@@ -424,6 +424,9 @@
 	  . (lambda ()
 	      (push 'company-robe company-backends)))))
 
+(leaf slim-mode
+  :ensure t)
+
 ;; -----------------------------------------------------------------------------
 ;; Javascript / TypeScript
 (leaf js2-mode
