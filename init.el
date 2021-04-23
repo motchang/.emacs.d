@@ -41,8 +41,8 @@
   :ensure t
   :bind (("C-c e" . macrostep-expand)))
 
-
 (leaf-keys (("C-x C-o" . other-window)))
+(leaf-keys (("C-c l" . toggle-truncate-lines)))
 
 (leaf ediff
   :custom
