@@ -432,20 +432,8 @@
 (leaf js2-mode
   :emacs>= 24.1
   :ensure t
-  :custom ((indent-tabs-mode . nil)
-	         (tab-width . 2)
-	         (c-basic-offset . 2)
-	         (c-basic-offset . 2)
-	         (js2-basic-offset . 2)
-	         (c-hanging-comment-ender-p . nil)
-	         (js-switch-indent-offset . 2))
-  :hook ((js2-mode-hook
-          . (lambda ()
-              (c-toggle-hungry-state t)
-              (c-set-offset 'case-lable' 2)
-              (c-set-offset 'arglist-intro' 2)
-              (c-set-offset 'arglist-close' 0)
-              (flycheck-mode)))))
+  :mode ("\\.js$")
+  :custom ((js2-basic-offset . 2)))
 
 (leaf typescript-mode
   :emacs>= 24.3
