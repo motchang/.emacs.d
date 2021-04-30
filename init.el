@@ -405,6 +405,7 @@
 (leaf rspec-mode
   :ensure t
   :after ruby-mode
+  :mode ("_spec\\.rb$")
   :hook (rspec-mode-hook
 	 . (lambda ()
 	     (flycheck-mode))))
