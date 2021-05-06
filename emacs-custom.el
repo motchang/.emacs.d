@@ -7,7 +7,7 @@
  '(auto-revert-interval 1)
  '(aw-keys '(106 107 108 105 111 104 121 117 112) t)
  '(before-save-hook '(delete-trailing-whitespace))
- '(c-basic-offset 2)
+ '(c-basic-offset 2 t)
  '(c-hanging-comment-ender-p nil t)
  '(c-toggle-hungry-state t t)
  '(column-number-mode t)

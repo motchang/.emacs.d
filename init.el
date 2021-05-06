@@ -167,6 +167,14 @@
   :ensure t
   :hook (prog-mode-hook))
 
+(leaf fringe-helper
+  :ensure t)
+
+(leaf git-gutter-fringe
+  :ensure t
+  :require git-gutter-fringe
+  :hook (prog-mode-hook . git-gutter-mode))
+
 (leaf git-link
   :emacs>= 24.3
   :ensure t
