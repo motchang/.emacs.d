@@ -127,7 +127,7 @@
 
 (leaf ace-window
   :ensure t
-  :after avy
+  :require t
   :bind (("C-M-o" . ace-window))
   :custom-face (aw-leading-char-face . '((t (:height 4.0 :foreground "#f1fa8c"))))
   :custom
@@ -155,7 +155,7 @@
 (leaf magit
   :emacs>= 25.1
   :ensure t
-  :after git-commit with-editor
+  :require t
   :hook (magit-mode-hook
 	 . (lambda ()
 	     (add-to-list 'process-coding-system-alist '("git" utf-8 . utf-8))
@@ -412,11 +412,11 @@
 
 (leaf rspec-mode
   :ensure t
-  :after ruby-mode
-  :mode ("_spec\\.rb$")
+  :require t
   :hook (rspec-mode-hook
 	 . (lambda ()
-	     (flycheck-mode))))
+	     (flycheck-mode)))
+  :config (rspec-install-snippets))
 
 (leaf rinari
   :ensure t
