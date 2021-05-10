@@ -438,6 +438,9 @@
 
 ;; -----------------------------------------------------------------------------
 ;; Javascript / TypeScript
+(leaf js
+  :custom (js-indent-level . 2))
+
 (leaf js2-mode
   :emacs>= 24.1
   :ensure t
