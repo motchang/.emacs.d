@@ -466,8 +466,8 @@
 
 (leaf prettier-js
   :ensure t
-  :hook ((js2-mode-hook . prettier-js-mode)
-         (typescript-mode-hook . prettier-js-mode)))
+  :hook ((js2-mode)
+         (typescript-mode)))
 
 (leaf json-mode
   :ensure t
