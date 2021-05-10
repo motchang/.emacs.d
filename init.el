@@ -441,6 +441,7 @@
 (leaf js2-mode
   :emacs>= 24.1
   :ensure t
+  :after js
   :mode ("\\.js$")
   :custom ((js2-basic-offset . 2)))
 
