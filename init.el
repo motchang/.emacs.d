@@ -426,6 +426,7 @@
 (leaf robe
   :emacs>= 24.4
   :ensure t
+  :require t
   :after inf-ruby
   :bind ("M-j" . robe-jump)
   :hook ((ruby-mode-hook . robe-mode)
