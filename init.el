@@ -162,6 +162,10 @@
 	     (set-default-coding-systems 'utf-8)
 	     (prefer-coding-system 'utf-8))))
 
+(leaf magithub
+  :ensure t
+  :config (magithub-feature-autoinject t))
+
 (leaf git-gutter
   :emacs>= 24.3
   :ensure t
