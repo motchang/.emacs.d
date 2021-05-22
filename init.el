@@ -67,8 +67,16 @@
 
 (leaf doom-themes
   :ensure t
+  :custom
+  (doom-themes-enable-bold . t)
+  (doom-themes-enable-italic . t)
   :config
-  (load-theme 'doom-dracula t))
+  (load-theme 'doom-dracula t)
+  (doom-themes-visual-bell-config)
+  (doom-themes-org-config))
+
+(leaf all-the-icons
+  :ensure t)
 
 (leaf rainbow-delimiters
   :ensure t
