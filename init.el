@@ -78,6 +78,13 @@
 (leaf all-the-icons
   :ensure t)
 
+(leaf doom-modeline
+  :ensure t
+  :custom
+  (doom-modeline-vcs-max-length . 60)
+  (doom-modeline-buffer-file-name-style . 'relative-to-project)
+  :config (doom-modeline-mode))
+
 (leaf rainbow-delimiters
   :ensure t
   :hook (prog-mode-hook))
