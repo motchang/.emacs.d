@@ -65,10 +65,10 @@
 ;;   :emacs>= 24.3
 ;;   :ensure t)
 
-(leaf dracula-theme
+(leaf doom-themes
   :ensure t
   :config
-  (load-theme 'dracula t))
+  (load-theme 'doom-dracula t))
 
 (leaf rainbow-delimiters
   :ensure t
