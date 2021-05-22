@@ -364,6 +364,9 @@
 (leaf apache-mode
   :ensure t)
 
+(leaf sql-indent
+  :ensure t)
+
 ;; -----------------------------------------------------------------------------
 ;; Ruby
 (leaf ruby-mode
