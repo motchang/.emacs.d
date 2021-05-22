@@ -533,11 +533,10 @@
 ;; Twitter
 (leaf twittering-mode
   :ensure t
-  :after epg epa-file
   :setq
   (twittering-initial-timeline-spec-string . '(":home"))
-  (twittering-status-format . "%FOLD{%RT{%FACE[bold]{RT}}%i%s>>%r @%C{%Y-%m-%d %H:%M:%S} %@{}\n%FOLD[ ]{%T%RT{\nretweeted by %s @%C{%Y-%m-%d %H:%M:%S}}}}")
-  ;; (twittering-status-format . "@%s %S %R\n%T %@ from %f%L%r%R\n")
+  ;; (twittering-status-format . "%FOLD{%RT{%FACE[bold]{RT}}%i%s>>%r @%C{%Y-%m-%d %H:%M:%S} %@{}\n%FOLD[ ]{%T%RT{\nretweeted by %s @%C{%Y-%m-%d %H:%M:%S}}}}")
+  (twittering-status-format . "@%s %S %R\n%T %@ from %f%L%r%R\n")
   (twittering-use-master-password . t)
   (twittering-icon-mode . nil)
   (twittering-timer-interval . 180))
