@@ -410,7 +410,7 @@
 
 (leaf ruby-end
   :ensure t
-  :hook (ruby-mode . 'ruby-end-mode))
+  :hook (ruby-mode))
 
 (leaf bundler
   :ensure t
