@@ -554,7 +554,10 @@
   (twittering-status-format . "@%s %S %R\n%T %@ from %f%L%r%R\n")
   (twittering-use-master-password . t)
   (twittering-icon-mode . nil)
-  (twittering-timer-interval . 180))
+  (twittering-timer-interval . 180)
+  :custom
+  (unless (fboundp 'epa--decode-coding-string)
+    (defalias 'epa--decode-coding-string #'decode-coding-string)))
 
 (server-start)
 
