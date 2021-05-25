@@ -384,7 +384,9 @@
 
 ;; -----------------------------------------------------------------------------
 ;; Ruby
-(leaf ruby-mode
+(leaf enh-ruby-mode
+  :require t
+  :mode ("\\.rb$")
   :custom ((c-toggle-hungry-state . t)
            (ruby-insert-encoding-magic-comment . nil)
            (electric-indent-mode . t)
@@ -449,9 +451,8 @@
   :emacs>= 24.4
   :ensure t
   :require t
-  :after inf-ruby
   :bind ("M-j" . robe-jump)
-  :hook ((ruby-mode-hook . robe-mode)
+  :hook ((enh-ruby-mode-hook . robe-mode)
 	 (company-mode-hook
 	  . (lambda ()
 	      (push 'company-robe company-backends)))))
