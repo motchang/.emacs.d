@@ -548,16 +548,16 @@
 ;; Twitter
 (leaf twittering-mode
   :ensure t
+  :init
+  (unless (fboundp 'epa--decode-coding-string)
+    (defalias 'epa--decode-coding-string #'decode-coding-string))
   :setq
   (twittering-initial-timeline-spec-string . '(":home"))
   ;; (twittering-status-format . "%FOLD{%RT{%FACE[bold]{RT}}%i%s>>%r @%C{%Y-%m-%d %H:%M:%S} %@{}\n%FOLD[ ]{%T%RT{\nretweeted by %s @%C{%Y-%m-%d %H:%M:%S}}}}")
   (twittering-status-format . "@%s %S %R\n%T %@ from %f%L%r%R\n")
   (twittering-use-master-password . t)
   (twittering-icon-mode . nil)
-  (twittering-timer-interval . 180)
-  :custom
-  (unless (fboundp 'epa--decode-coding-string)
-    (defalias 'epa--decode-coding-string #'decode-coding-string)))
+  (twittering-timer-interval . 180))
 
 (server-start)
 
