@@ -385,6 +385,7 @@
 ;; -----------------------------------------------------------------------------
 ;; Ruby
 (leaf enh-ruby-mode
+  :ensure t
   :require t
   :mode ("\\.rb$")
   :custom ((c-toggle-hungry-state . t)
