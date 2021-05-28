@@ -422,7 +422,7 @@
 (leaf rubocop
   :emacs>= 24
   :ensure t
-  :hook (ruby-mode-hook
+  :hook (enh-ruby-mode-hook
 	 . (lambda ()
 	     (flycheck-mode)
 	     (flycheck-select-checker 'ruby-rubocop)
