@@ -150,8 +150,7 @@
 
 (leaf auto-highlight-symbol
   :ensure t
-  :custom
-  (global-auto-highlight-symbol-mode . t))
+  :hook (prog-mode-hook))
 
 (leaf flycheck
   :emacs>= 24.3
@@ -386,7 +385,6 @@
 ;; Ruby
 (leaf enh-ruby-mode
   :ensure t
-  :require t
   :mode ("\\.rb$")
   :custom ((c-toggle-hungry-state . t)
            (ruby-insert-encoding-magic-comment . nil)
@@ -440,7 +438,8 @@
   :require t
   :hook (rspec-mode-hook
 	 . (lambda ()
-	     (flycheck-mode)))
+	     (flycheck-mode)
+       (auto-highlight-symbol-mode)))
   :config (rspec-install-snippets))
 
 (leaf rinari
