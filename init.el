@@ -116,7 +116,8 @@
   (ivy-height . 40)
   (ivy-count-format . "(%d/%d)")
   (ivy-mode . t)
-  (counsel-mode . t))
+  (counsel-mode . t)
+  (ivy-initial-inputs-alist . nil))
 
 (leaf swiper
   :emacs>= 24.5
