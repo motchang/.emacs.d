@@ -52,6 +52,7 @@
 (leaf exec-path-from-shell
   :emacs>= 24.1
   :ensure t
+  :custom (exec-path-from-shell-check-startup-files . nil)
   :config (exec-path-from-shell-initialize))
 
 ;; (message exec-path)
