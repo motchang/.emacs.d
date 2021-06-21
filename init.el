@@ -328,7 +328,7 @@
 (leaf web-mode
   :emacs>= 23.1
   :ensure t
-  :mode ("\\.html$")
+  :mode ("\\.html$" "\\.erb$")
   :custom ((web-mode-html-offset             . 2)
            (web-mode-markup-indent-offset    . 2)
            (web-mode-css-offset              . 2)
