@@ -341,7 +341,8 @@
            (web-mode-enable-auto-pairing     . t)
            (web-mode-enable-auto-closing     . t)
            (web-mode-enable-auto-quoting     . t)
-           (web-mode-enable-auto-indentation . t)))
+           (web-mode-enable-auto-indentation . t))
+  :config (auto-highlight-symbol-mode . nil))
 (leaf scss-mode
   :ensure t
   :custom ((tab-width . 2)
