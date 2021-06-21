@@ -383,6 +383,12 @@
 (leaf sql-indent
   :ensure t)
 
+(leaf plantuml-mode
+  :ensure t
+  :mode ("\\.plantuml$")
+  :custom ((plantuml-executable-path . "/usr/local/bin/plantuml")
+           (plantuml-default-exec-mode . 'executable)))
+
 ;; -----------------------------------------------------------------------------
 ;; Ruby
 (leaf enh-ruby-mode
