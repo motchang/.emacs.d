@@ -392,7 +392,7 @@
 
 ;; -----------------------------------------------------------------------------
 ;; Ruby
-(leaf enh-ruby-mode
+(leaf ruby-mode
   :ensure t
   :mode ("\\.rb$")
   :custom ((c-toggle-hungry-state . t)
@@ -429,7 +429,7 @@
 (leaf rubocop
   :emacs>= 24
   :ensure t
-  :hook (enh-ruby-mode-hook
+  :hook (ruby-mode-hook
 	 . (lambda ()
 	     (flycheck-mode)
 	     (flycheck-select-checker 'ruby-rubocop)
@@ -461,7 +461,7 @@
   :ensure t
   :require t
   :bind ("M-j" . robe-jump)
-  :hook ((enh-ruby-mode-hook . robe-mode)
+  :hook ((ruby-mode-hook . robe-mode)
 	 (company-mode-hook
 	  . (lambda ()
 	      (push 'company-robe company-backends)))))
