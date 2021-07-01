@@ -1,3 +1,5 @@
+(setq debug-on-error nil)
+
 (setq custom-file "~/.emacs.d/emacs-custom.el")
 (load custom-file)
 
@@ -208,28 +210,42 @@
 (leaf company
   :emacs>= 24.3
   :ensure t
-  :bind (("M-i" . company-complete)
-         (:company-active-map
-          ;; C-n, C-pで補完候補を選べるように
-          ("M-n" . nil)
-          ("M-p" . nil)
-          ("C-n" . company-select-next)
-          ("C-p" . company-select-previous)
-          ;; C-hがデフォルトでドキュメント表示にmapされているので、文字を消せるようにmapを外す
-          ("C-h" . nil)
-          ;; 1つしか候補がなかったらtabで補完、複数候補があればtabで次の候補へ行くように
-          ("<tab>" . company-complete-common-or-cycle)
-          ;; ドキュメント表示
-          ("M-d" . company-show-doc-buffer)))
+  :init (global-company-mode)
   :custom
-  (global-company-mode . t)
   ;; n文字入力で補完されるよにう
   (company-minimum-prefix-length . 4)
   ;; デフォルトは0.5
-  (company-idle-delay . 3)
+  (company-idle-delay . 0.5)
   (company-tooltip-idle-delay . 3)
   ;; 候補の一番上でselect-previousしたら一番下に、一番下でselect-nextしたら一番上に行くように
-  (company-selection-wrap-around . t))
+  (company-selection-wrap-around . t)
+  :bind
+  ("M-i" . company-complete)
+  (:company-active-map
+   ;; C-n, C-pで補完候補を選べるように
+   ("M-n" . nil)
+   ("M-p" . nil)
+   ("C-n" . company-select-next)
+   ("C-p" . company-select-previous)
+   ;; C-hがデフォルトでドキュメント表示にmapされているので、文字を消せるようにmapを外す
+   ("C-h" . nil)
+   ;; 1つしか候補がなかったらtabで補完、複数候補があればtabで次の候補へ行くように
+   ("<tab>" . company-complete-common-or-cycle)
+   ;; ドキュメント表示
+   ("M-d" . company-show-doc-buffer)))
+
+(leaf yasnippet
+  :ensure t
+  :init (yas-global-mode t)
+  :after minitest rspec-mode
+  :config
+  (add-to-list 'company-backends 'company-yasnippet)
+  (leaf yasnippet-snippets
+    :ensure t)
+  (leaf ivy-yasnippet
+    :ensure t
+    :bind (("C-c y" . ivy-yasnippet)
+           ("C-c C-y" . ivy-yasnippet))))
 
 (leaf string-inflection
   :ensure t
@@ -250,16 +266,6 @@
   (migemo-regex-dictionary . nil)
   :config
   (migemo-init))
-
-(leaf yasnippet
-  :ensure t
-  :require t
-  :bind (:yas-minor-mode-map
-         ("C-c y" . company-yasnippet))
-  :config
-  (yas-global-mode)
-  (leaf yasnippet-snippets :ensure t))
-
 
 ;; -----------------------------------------------------------------------------
 ;; LSP, etc
@@ -394,7 +400,6 @@
 ;; Ruby
 (leaf ruby-mode
   :ensure t
-  :mode ("\\.rb$")
   :custom ((c-toggle-hungry-state . t)
            (ruby-insert-encoding-magic-comment . nil)
            (electric-indent-mode . t)
@@ -409,62 +414,64 @@
     :custom ((inf-ruby-default-implementation . "pry")
              (inf-ruby-eval-binding . "Pry.toplevel_binding"))
     :hook ((ruby-mode-hook . inf-ruby-minor-mode)
-           (inf-ruby-mode-hook . ansi-color-for-comint-mode-on))))
+           (inf-ruby-mode-hook . ansi-color-for-comint-mode-on)))
 
-(leaf ruby-block
-  :el-get juszczakn/ruby-block
-  :require t
-  :custom (ruby-block-highlight-toggle . t)
-  :hook (ruby-mode-hook . ruby-block-mode)
-        (rspec-mode-hook . ruby-block-mode))
+  (leaf ruby-block
+    :el-get juszczakn/ruby-block
+    :require t
+    :custom (ruby-block-highlight-toggle . t)
+    :hook (ruby-block-mode . rspec-mode-hook))
 
-(leaf ruby-end
-  :ensure t
-  :hook (ruby-mode))
+  (leaf ruby-end
+    :ensure t
+    :hook (ruby-mode))
 
-(leaf bundler
-  :ensure t
-  :after inf-ruby)
+  (leaf bundler
+    :ensure t
+    :after inf-ruby)
 
-(leaf rubocop
-  :emacs>= 24
-  :ensure t
-  :hook (ruby-mode-hook
-	 . (lambda ()
-	     (flycheck-mode)
-	     (flycheck-select-checker 'ruby-rubocop)
-             (flycheck-disable-checker 'ruby-rubylint)
-             (flycheck-disable-checker 'ruby-reek))))
+  (leaf rubocop
+    :emacs>= 24
+    :ensure t
+    :hook (ruby-mode-hook
+	         . (lambda ()
+	             (flycheck-mode)
+	             (flycheck-select-checker 'ruby-rubocop)
+               (flycheck-disable-checker 'ruby-rubylint)
+               (flycheck-disable-checker 'ruby-reek))))
 
-(leaf rubocopfmt
-  :ensure t
-  :hook (ruby-mode . rubocopfmt-mode)
-  :custom
-  ((rubocopfmt-include-unsafe-cops . t)))
+  (leaf rubocopfmt
+    :ensure t
+    ;; :hook (ruby-mode-hook) do-not run rubocop when buffer saved.
+    :custom
+    ((rubocopfmt-include-unsafe-cops . t)))
 
-(leaf rspec-mode
-  :ensure t
-  :require t
-  :hook (rspec-mode-hook
-	 . (lambda ()
-	     (flycheck-mode)
-       (auto-highlight-symbol-mode)))
-  :config (rspec-install-snippets))
+  (leaf minitest
+    :ensure t
+    :hook (ruby-mode-hook)
+    :defer-config (minitest-install-snippets))
 
-(leaf rinari
-  :ensure t
-  :after ruby-mode inf-ruby ruby-compilation jump
-  :hook (ruby-mode-hook . rinari-minor-mode))
+  (leaf rspec-mode
+    :ensure t
+    :require t
+    :after (ruby-mode)
+    :hook (flycheck-mode . auto-highlight-symbol-mode)
+    :defer-config (rspec-install-snippets))
 
-(leaf robe
-  :emacs>= 24.4
-  :ensure t
-  :require t
-  :bind ("M-j" . robe-jump)
-  :hook ((ruby-mode-hook . robe-mode)
-	 (company-mode-hook
-	  . (lambda ()
-	      (push 'company-robe company-backends)))))
+  (leaf rinari
+    :ensure t
+    :after ruby-mode inf-ruby ruby-compilation jump
+    :hook (ruby-mode-hook . rinari-minor-mode))
+
+  (leaf robe
+    :emacs>= 24.4
+    :ensure t
+    :require t
+    :bind ("M-j" . robe-jump)
+    :hook ((ruby-mode-hook . robe-mode)
+	         (company-mode-hook
+	          . (lambda ()
+	              (push 'company-robe company-backends))))))
 
 (leaf slim-mode
   :ensure t)
