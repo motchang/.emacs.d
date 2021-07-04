@@ -234,6 +234,13 @@
    ;; ドキュメント表示
    ("M-d" . company-show-doc-buffer)))
 
+;; To customize:
+;; M-x customize-group [RET] company-box [RET]
+(leaf company-box
+  :emacs>= 26.0
+  :ensure t
+  :hook (company-mode-hook))
+
 (leaf yasnippet
   :ensure t
   :init (yas-global-mode t)
