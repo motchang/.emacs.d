@@ -1,0 +1,7 @@
+# -*- mode: snippet -*-
+# name: assert_changes
+# key: assert_changes
+# --
+assert_changes -> { ${1:expression} }, ${2:msg = nil}, from: ${3:from}, to: ${4:to} do
+  ${5:act}
+end
