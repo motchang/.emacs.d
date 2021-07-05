@@ -1,0 +1,7 @@
+# -*- mode: snippet -*-
+# name: refute_changes
+# key: refute_changes
+# --
+refute_changes -> { ${1:expression} }, ${2:msg = nil} do
+  ${3:act}
+end
