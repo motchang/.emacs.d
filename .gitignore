@@ -3,4 +3,5 @@
 !.gitignore
 !init.el
 !emacs-custom.el
+!snippets
 !README.md
