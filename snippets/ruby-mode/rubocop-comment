@@ -1,0 +1,5 @@
+# key: rubocop-comment
+# name: rubocop-comment
+# --
+# rubocop:disable $1
+# rubocop:enable $1
