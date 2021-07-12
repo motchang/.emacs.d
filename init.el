@@ -216,9 +216,13 @@
   (company-minimum-prefix-length . 4)
   ;; デフォルトは0.5
   (company-idle-delay . 0.5)
-  (company-tooltip-idle-delay . 3)
+  (company-tooltip-idle-delay . 0.5)
   ;; 候補の一番上でselect-previousしたら一番下に、一番下でselect-nextしたら一番上に行くように
   (company-selection-wrap-around . t)
+  (completion-ignore-case . t)
+  (company-dabbrev-downcase . nil)
+  :config
+  (add-to-list 'company-backends '(company-capf company-dabbrev company-ispell company-files company-yasnippet))
   :bind
   ("M-i" . company-complete)
   (:company-active-map
@@ -463,7 +467,7 @@
     :require t
     :after (ruby-mode)
     :hook (flycheck-mode . auto-highlight-symbol-mode)
-    :defer-config (rspec-install-snippets))
+    :config (rspec-install-snippets))
 
   (leaf rinari
     :ensure t
