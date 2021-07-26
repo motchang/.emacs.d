@@ -154,7 +154,8 @@
 
 (leaf auto-highlight-symbol
   :ensure t
-  :hook (prog-mode-hook))
+  :hook (prog-mode-hook)
+  :custom (ahs-idle-interval . 0))
 
 (leaf flycheck
   :emacs>= 24.3
