@@ -411,6 +411,7 @@
 ;; Ruby
 (leaf ruby-mode
   :ensure t
+  :mode ("\\.rb$" "\\.ruby$")
   :custom ((c-toggle-hungry-state . t)
            (ruby-insert-encoding-magic-comment . nil)
            (electric-indent-mode . t)
