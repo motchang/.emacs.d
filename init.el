@@ -223,7 +223,6 @@
   (completion-ignore-case . t)
   (company-dabbrev-downcase . nil)
   :config
-  (add-to-list 'company-backends '(company-capf company-dabbrev company-ispell company-files company-yasnippet))
   :bind
   ("M-i" . company-complete)
   (:company-active-map
@@ -251,7 +250,7 @@
   :init (yas-global-mode t)
   :after minitest rspec-mode
   :config
-  (add-to-list 'company-backends 'company-yasnippet)
+  (cons company-backends (cons 'company-yasnippet nil))
   (leaf yasnippet-snippets
     :ensure t)
   (leaf ivy-yasnippet
@@ -480,10 +479,9 @@
     :ensure t
     :require t
     :bind ("M-j" . robe-jump)
-    :hook ((ruby-mode-hook . robe-mode)
-	         (company-mode-hook
-	          . (lambda ()
-	              (push 'company-robe company-backends))))))
+    :config
+    (add-to-list 'company-backends 'company-robe)
+    :hook (ruby-mode-hook . robe-mode)))
 
 (leaf slim-mode
   :ensure t)
