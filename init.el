@@ -211,21 +211,10 @@
 (leaf company
   :emacs>= 24.3
   :ensure t
-  :init (global-company-mode)
-  :custom
-  ;; n文字入力で補完されるよにう
-  (company-minimum-prefix-length . 4)
-  ;; デフォルトは0.5
-  (company-idle-delay . 0.5)
-  (company-tooltip-idle-delay . 0.5)
-  ;; 候補の一番上でselect-previousしたら一番下に、一番下でselect-nextしたら一番上に行くように
-  (company-selection-wrap-around . t)
-  (completion-ignore-case . t)
-  (company-dabbrev-downcase . nil)
-  :config
+  :blackout t
+  :leaf-defer nil
   :bind
-  ("M-i" . company-complete)
-  (:company-active-map
+  (company-active-map
    ;; C-n, C-pで補完候補を選べるように
    ("M-n" . nil)
    ("M-p" . nil)
@@ -236,7 +225,21 @@
    ;; 1つしか候補がなかったらtabで補完、複数候補があればtabで次の候補へ行くように
    ("<tab>" . company-complete-common-or-cycle)
    ;; ドキュメント表示
-   ("M-d" . company-show-doc-buffer)))
+   ("M-d" . company-show-doc-buffer))
+  (company-search-map
+   ("C-n" . company-select-next)
+   ("C-p" . company-select-previous))
+  ("M-i" . company-complete)
+  :custom ;; n文字入力で補完されるよにう
+  (company-minimum-prefix-length . 4)
+  ;; デフォルトは0.5
+  (company-idle-delay . 0.5)
+  (company-tooltip-idle-delay . 0.5)
+  ;; 候補の一番上でselect-previousしたら一番下に、一番下でselect-nextしたら一番上に行くように
+  (company-selection-wrap-around . t)
+  (completion-ignore-case . t)
+  (company-dabbrev-downcase . nil)
+  :global-minor-mode global-company-mode)
 
 ;; To customize:
 ;; M-x customize-group [RET] company-box [RET]
