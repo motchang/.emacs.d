@@ -513,21 +513,14 @@
 	         (typescript-indent-level . 2)
 	         (flycheck-mode . t)
            (flycheck-check-syntax-automatically . '(save mode-enabled))
-	         (eldoc-mode . t))
-  :mode ("\\.ts[x]$"))
-
-(leaf tide
-  :emacs>= 25.1
-  :ensure t
-  :after flycheck typescript-mode
-  :hook ((typescript-mode-hook
-	  . (lambda ()
-	      (tide-setup)
-	      (company-mode-on)))))
+	         (eldoc-mode . t)
+           (company-m))
+  :mode ("\\.ts[x]$")
+  :hook (typescript-mode-hook . lsp))
 
 (leaf prettier-js
   :ensure t
-  :hook (js2-mode-hook typescript-mode-hook))
+  :hook (js2-mode-hook typescript-mode-hook javascript-mode-hook js2-mode-hook))
 
 (leaf json-mode
   :ensure t
