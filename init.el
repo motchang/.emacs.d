@@ -250,9 +250,7 @@
 
 (leaf yasnippet
   :ensure t
-  :init (yas-global-mode t)
-  :after minitest rspec-mode
-  :config
+  :config (yas-global-mode t)
   (cons company-backends (cons 'company-yasnippet nil))
   (leaf yasnippet-snippets
     :ensure t)
