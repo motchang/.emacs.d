@@ -286,6 +286,7 @@
   :ensure t
   :after spinner markdown-mode lv
   :hook (prog-major-mode lsp-prog-major-mode-enable)
+  :commands (lsp lsp-deferred)
   :custom
   (lsp-inhibit-message . t)
   (lsp-message-project-root-warning . t)
@@ -296,6 +297,10 @@
   :emacs>= 26.1
   :ensure t
   :after lsp-mode markdown-mode)
+
+(leaf lsp-ivy
+  :ensure t
+  :commands lsp-ivy-workspace-symbol)
 
 (leaf dap-mode
   :emacs>= 26.1
