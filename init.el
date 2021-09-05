@@ -527,6 +527,10 @@
   :after js json-reformat json-snatcher
   :custom (js-indent-level . 2))
 
+(leaf vue-mode
+  :ensure t
+  :mode ("\\.vue$"))
+
 ;; -----------------------------------------------------------------------------
 ;; Rust
 (leaf rustic
