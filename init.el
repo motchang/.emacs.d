@@ -138,9 +138,9 @@
   :after swiper
   :ensure t
   :bind (("M-x" . counsel-M-x)
-	 ("M-y" . counsel-yank-pop)
-	 ("C-x b" . counsel-buffer-or-recentf)
-	 ("C-x C-b" . counsel-switch-buffer)))
+         ("M-y" . counsel-yank-pop)
+         ("C-x b" . counsel-buffer-or-recentf)
+         ("C-x C-b" . counsel-switch-buffer)))
 
 (leaf ivy-ghq
   :added "2021-02-16"
@@ -182,10 +182,10 @@
   :ensure t
   :require t
   :hook (magit-mode-hook
-	 . (lambda ()
-	     (add-to-list 'process-coding-system-alist '("git" utf-8 . utf-8))
-	     (set-default-coding-systems 'utf-8)
-	     (prefer-coding-system 'utf-8))))
+         . (lambda ()
+             (add-to-list 'process-coding-system-alist '("git" utf-8 . utf-8))
+             (set-default-coding-systems 'utf-8)
+             (prefer-coding-system 'utf-8))))
 
 (leaf magithub
   :ensure t
@@ -268,9 +268,9 @@
 (leaf string-inflection
   :ensure t
   :bind (("C-c i" . string-inflection-cycle)
-	 ("C-c C" . string-inflection-camelcase)
-	 ("C-c L" . string-inflection-lower-camelcase)
-	 ("C-c J" . string-inflection-java-style-cycle)))
+         ("C-c C" . string-inflection-camelcase)
+         ("C-c L" . string-inflection-lower-camelcase)
+         ("C-c J" . string-inflection-java-style-cycle)))
 
 (leaf migemo
   :ensure t
@@ -458,9 +458,9 @@
     :emacs>= 24
     :ensure t
     :hook (ruby-mode-hook
-	         . (lambda ()
-	             (flycheck-mode)
-	             (flycheck-select-checker 'ruby-rubocop)
+           . (lambda ()
+               (flycheck-mode)
+               (flycheck-select-checker 'ruby-rubocop)
                (flycheck-disable-checker 'ruby-rubylint)
                (flycheck-disable-checker 'ruby-reek))))
 
@@ -515,11 +515,11 @@
   :emacs>= 24.3
   :ensure t
   :custom ((indent-tabs-mode . nil)
-	         (tab-width . 2)
-	         (typescript-indent-level . 2)
-	         (flycheck-mode . t)
+           (tab-width . 2)
+           (typescript-indent-level . 2)
+           (flycheck-mode . t)
            (flycheck-check-syntax-automatically . '(save mode-enabled))
-	         (eldoc-mode . t)
+           (eldoc-mode . t)
            (company-m))
   :mode ("\\.ts[x]$")
   :hook (typescript-mode-hook . lsp))
