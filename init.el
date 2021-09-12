@@ -88,6 +88,12 @@
   (doom-modeline-buffer-file-name-style . 'relative-to-project)
   :config (doom-modeline-mode))
 
+(leaf highlight-indent-guides
+  :ensure t
+  :require t
+  :custom (highlight-indent-guides-method . 'column)
+  :hook (prog-mode-hook))
+
 (leaf rainbow-delimiters
   :ensure t
   :hook (prog-mode-hook))
