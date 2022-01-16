@@ -415,9 +415,8 @@
 
 (leaf plantuml-mode
   :ensure t
-  :mode ("\\.plantuml$")
-  :custom ((plantuml-executable-path . "/usr/local/bin/plantuml")
-           (plantuml-default-exec-mode . 'executable)))
+  :mode ("\\.plantuml$" "\\.puml$")
+  :custom (plantuml-default-exec-mode . 'executable))
 
 ;; -----------------------------------------------------------------------------
 ;; Ruby
