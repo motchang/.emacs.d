@@ -161,7 +161,7 @@
 (leaf auto-highlight-symbol
   :ensure t
   :hook (prog-mode-hook)
-  :custom (ahs-idle-interval . 0))
+  :custom (ahs-idle-interval . 1))
 
 (leaf flycheck
   :emacs>= 24.3
@@ -276,7 +276,7 @@
   :ensure t
   :require t
   :custom
-  (migemo-dictionary . "/usr/local/share/migemo/utf-8/migemo-dict")
+  (migemo-dictionary . "/opt/homebrew/share/migemo/utf-8/migemo-dict")
   (migemo-command . "cmigemo")
   (migemo-options . '("-q" "--emacs"))
   (migemo-user-dictionary . nil)
