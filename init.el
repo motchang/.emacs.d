@@ -161,7 +161,7 @@
 (leaf auto-highlight-symbol
   :ensure t
   :hook (prog-mode-hook)
-  :custom (ahs-idle-interval . 0))
+  :custom (ahs-idle-interval . 1))
 
 (leaf flycheck
   :emacs>= 24.3
@@ -276,7 +276,7 @@
   :ensure t
   :require t
   :custom
-  (migemo-dictionary . "/usr/local/share/migemo/utf-8/migemo-dict")
+  (migemo-dictionary . "/opt/homebrew/share/migemo/utf-8/migemo-dict")
   (migemo-command . "cmigemo")
   (migemo-options . '("-q" "--emacs"))
   (migemo-user-dictionary . nil)
@@ -561,14 +561,17 @@
 ;; Go
 (leaf go-mode
   :ensure t
-  :custom ((exec-path-from-shell-copy-env . "GOPATH")
-           (tab-width . 2)
-           (indent-tabs-mode . nil)))
+  :custom
+  (exec-path-from-shell-copy-env . "GOPATH")
+  (flycheck-mode . t)
+  (gofmt-command . "goimports")
+  :hook (go-mode-hook . lsp)
+  (before-save-hook . gofmt-before-save))
 
 (leaf flycheck-golangci-lint
   :emacs>= 24
   :ensure t
-  :after flycheck)
+  :hook (go-mode . flycheck-golangci-lint-setup))
 
 ;; -----------------------------------------------------------------------------
 ;; Ocaml
