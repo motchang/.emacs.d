@@ -561,14 +561,17 @@
 ;; Go
 (leaf go-mode
   :ensure t
-  :custom ((exec-path-from-shell-copy-env . "GOPATH")
-           (tab-width . 2)
-           (indent-tabs-mode . nil)))
+  :custom
+  (exec-path-from-shell-copy-env . "GOPATH")
+  (flycheck-mode . t)
+  (gofmt-command . "goimports")
+  :hook (go-mode-hook . lsp)
+  (before-save-hook . gofmt-before-save))
 
 (leaf flycheck-golangci-lint
   :emacs>= 24
   :ensure t
-  :after flycheck)
+  :hook (go-mode . flycheck-golangci-lint-setup))
 
 ;; -----------------------------------------------------------------------------
 ;; Ocaml
