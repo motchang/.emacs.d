@@ -158,11 +158,6 @@
   :custom
   (aw-keys . '(?j ?k ?l ?i ?o ?h ?y ?u ?p)))
 
-(leaf auto-highlight-symbol
-  :ensure t
-  :hook (prog-mode-hook)
-  :custom (ahs-idle-interval . 1))
-
 (leaf flycheck
   :emacs>= 24.3
   :ensure t)
@@ -370,8 +365,7 @@
            (web-mode-enable-auto-pairing     . t)
            (web-mode-enable-auto-closing     . t)
            (web-mode-enable-auto-quoting     . t)
-           (web-mode-enable-auto-indentation . t))
-  :config (auto-highlight-symbol-mode . nil))
+           (web-mode-enable-auto-indentation . t)))
 (leaf scss-mode
   :ensure t
   :custom ((tab-width . 2)
@@ -478,7 +472,6 @@
     :ensure t
     :require t
     :after (ruby-mode)
-    :hook (flycheck-mode . auto-highlight-symbol-mode)
     :config (rspec-install-snippets))
 
   (leaf rinari
@@ -544,7 +537,6 @@
   :mode ("\\.rs$")
   :after flycheck xterm-color markdown-mode spinner
   :custom
-  (auto-highlight-symbol-mode . t)
   (smartparens-mode . t)
   (rustic-lsp-server . 'rust-analyzer)
   (lsp-rust-analyzer-server-command . '("~/.cargo/bin/rust-analyzer"))
@@ -572,6 +564,12 @@
   :emacs>= 24
   :ensure t
   :hook (go-mode . flycheck-golangci-lint-setup))
+
+(leaf gotest
+  :added "2022-08-09"
+  :emacs>= 24.3
+  :ensure t
+  :after go-mode)
 
 ;; -----------------------------------------------------------------------------
 ;; Ocaml
