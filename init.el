@@ -280,6 +280,13 @@
   :config
   (migemo-init))
 
+(leaf direnv
+  :added "2022-08-19"
+  :emacs>= 25.1
+  :ensure t
+  :custom
+  (direnv-mode . t))
+
 ;; -----------------------------------------------------------------------------
 ;; LSP, etc
 (leaf lsp-mode
@@ -563,13 +570,18 @@
 (leaf flycheck-golangci-lint
   :emacs>= 24
   :ensure t
-  :hook (go-mode . flycheck-golangci-lint-setup))
+  :hook
+  (go-mode . flycheck-golangci-lint-setup)
+  :config
+  (flycheck-add-next-checker 'lsp 'golangci-lint))
 
 (leaf gotest
   :added "2022-08-09"
   :emacs>= 24.3
   :ensure t
-  :after go-mode)
+  :after go-mode
+  :custom
+  (go-test-args . "-v"))
 
 ;; -----------------------------------------------------------------------------
 ;; Ocaml
