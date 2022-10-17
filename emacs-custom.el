@@ -19,7 +19,8 @@
  '(counsel-mode t)
  '(create-lockfiles nil nil nil "Customized with use-package lsp-mode")
  '(css-indent-offset 2 t)
- '(custom-safe-themes '(default))
+ '(custom-safe-themes
+   '("680f62b751481cc5b5b44aeab824e5683cf13792c006aeba1c25ce2d89826426" "51c71bb27bdab69b505d9bf71c99864051b37ac3de531d91fdad1598ad247138" "467dc6fdebcf92f4d3e2a2016145ba15841987c71fbe675dcfe34ac47ffb9195" "2e05569868dc11a52b08926b4c1a27da77580daa9321773d92822f7a639956ce" "70b596389eac21ab7f6f7eb1cf60f8e60ad7c34ead1f0244a577b1810e87e58c" "afa47084cb0beb684281f480aa84dab7c9170b084423c7f87ba755b15f6776ef" "7e068da4ba88162324d9773ec066d93c447c76e9f4ae711ddd0c5d3863489c52" "a138ec18a6b926ea9d66e61aac28f5ce99739cf38566876dc31e29ec8757f6e2" "a44e2d1636a0114c5e407a748841f6723ed442dc3a0ed086542dc71b92a87aee" default))
  '(diff-switches "-u -w")
  '(doom-themes-enable-bold t)
  '(doom-themes-enable-italic t)
@@ -42,7 +43,7 @@
  '(global-company-mode t)
  '(global-font-lock-mode t)
  '(global-hl-line-mode t)
- '(global-linum-mode t)
+ '(global-linum-mode nil)
  '(imenu-list-pisition 'left t)
  '(imenu-list-size 30 t)
  '(indent-tabs-mode nil)
