@@ -74,7 +74,9 @@
   (doom-themes-enable-bold . t)
   (doom-themes-enable-italic . t)
   :config
-  (load-theme 'doom-dracula t)
+  ;; (load-theme 'doom-dracula t)
+  (load-theme 'doom-nord-light t)
+  ;; (load-theme 'doom-ayu-light)
   (doom-themes-visual-bell-config)
   (doom-themes-org-config))
 
@@ -88,6 +90,9 @@
   (doom-modeline-buffer-file-name-style . 'relative-to-project)
   :config (doom-modeline-mode))
 
+(leaf linum-mode
+  :hook (prog-mode-hook))
+
 (leaf highlight-indent-guides
   :ensure t
   :require t
@@ -100,13 +105,12 @@
 
 (leaf rainbow-mode
   :ensure t
-  :hook
-  css-mode-hook
-  emacs-lisp-mode-hook
-  hamlet-mode-hook
-  sass-mode-hook
-  scss-mode-hook
-  web-mode-hook)
+  :hook (css-mode-hook
+         emacs-lisp-mode-hook
+         hamlet-mode-hook
+         sass-mode-hook
+         scss-mode-hook
+         web-mode-hook))
 
 (leaf amx
   :emacs>= 24.4
@@ -287,6 +291,10 @@
   :custom
   (direnv-mode . t))
 
+(leaf treemacs
+  :ensure t
+  :custom (treemacs-project-follow-mode . t))
+
 ;; -----------------------------------------------------------------------------
 ;; LSP, etc
 (leaf lsp-mode
@@ -299,29 +307,27 @@
   (lsp-inhibit-message . t)
   (lsp-message-project-root-warning . t)
   (create-lockfiles . nil)
-  (lsp-prefer-capf . t))
-
-(leaf lsp-ui
-  :emacs>= 26.1
-  :ensure t
-  :after lsp-mode markdown-mode)
-
-(leaf lsp-ivy
-  :ensure t
-  :commands lsp-ivy-workspace-symbol)
-
-(leaf dap-mode
-  :emacs>= 26.1
-  :ensure t
-  :after lsp-mode bui lsp-treemacs posframe
-  :custom ((dap-tooltip-mode . 1)
-           (dap-mode . 1))
+  (lsp-prefer-capf . t)
   :config
-  (leaf dap-ui
-    :ensure nil
-    :require t
+  (leaf lsp-ui
+    :emacs>= 26.1
+    :ensure t
+    :after lsp-mode markdown-mode)
+  (leaf lsp-ivy
+    :ensure t
+    :commands lsp-ivy-workspace-symbol)
+  (leaf dap-mode
+    :emacs>= 26.1
+    :ensure t
+    :after lsp-mode bui lsp-treemacs posframe
+    :custom ((dap-tooltip-mode . 1)
+             (dap-mode . 1))
     :config
-    (dap-ui-mode 1)))
+    (leaf dap-ui
+      :ensure nil
+      :require t
+      :config
+      (dap-ui-mode 1))))
 
 ;; Display debug windows on session startup
 ;; https://emacs-lsp.github.io/dap-mode/page/how-to/
@@ -558,30 +564,39 @@
 
 ;; -----------------------------------------------------------------------------
 ;; Go
+(defun my/set-line-spacing (spacing)
+  "Return whether B-NAME is visible."
+  (setq line-spacing spacing))
+
+(defun my/set-line-spacing-go-mode ()
+  (my/set-line-spacing 4))
+
 (leaf go-mode
   :ensure t
   :custom
   (exec-path-from-shell-copy-env . "GOPATH")
   (flycheck-mode . t)
   (gofmt-command . "goimports")
-  :hook (go-mode-hook . lsp)
-  (before-save-hook . gofmt-before-save))
-
-(leaf flycheck-golangci-lint
-  :emacs>= 24
-  :ensure t
   :hook
-  (go-mode . flycheck-golangci-lint-setup)
+  (go-mode-hook . lsp)
+  (go-mode-hook . my/set-line-spacing-go-mode)
+  (before-save-hook . gofmt-before-save)
   :config
-  (flycheck-add-next-checker 'lsp 'golangci-lint))
-
-(leaf gotest
-  :added "2022-08-09"
-  :emacs>= 24.3
-  :ensure t
-  :after go-mode
-  :custom
-  (go-test-args . "-v"))
+  (leaf flycheck-golangci-lint
+    :emacs>= 24
+    :ensure t
+    :after lsp
+    :hook
+    (go-mode-hook . flycheck-golangci-lint-setup)
+    :config
+    (flycheck-add-next-checker 'lsp 'golangci-lint))
+  (leaf gotest
+    :added "2022-08-09"
+    :emacs>= 24.3
+    :ensure t
+    :after go-mode
+    :custom
+    (go-test-args . "-v")))
 
 ;; -----------------------------------------------------------------------------
 ;; Ocaml
