@@ -74,8 +74,8 @@
   (doom-themes-enable-bold . t)
   (doom-themes-enable-italic . t)
   :config
-  ;; (load-theme 'doom-dracula t)
-  (load-theme 'doom-nord-light t)
+  (load-theme 'doom-dracula t)
+  ;; (load-theme 'doom-nord-light t)
   ;; (load-theme 'doom-ayu-light)
   (doom-themes-visual-bell-config)
   (doom-themes-org-config))
@@ -295,6 +295,13 @@
   :ensure t
   :custom (treemacs-project-follow-mode . t))
 
+(leaf wakatime-mode
+  :doc "Automatic time tracking extension for WakaTime"
+  :tag "comm" "calendar"
+  :added "2022-11-24"
+  :ensure t
+  :config (global-wakatime-mode t))
+
 ;; -----------------------------------------------------------------------------
 ;; LSP, etc
 (leaf lsp-mode
@@ -401,7 +408,8 @@
   :ensure t)
 
 (leaf terraform-mode
-  :ensure t)
+  :ensure t
+  :hook (before-save-hook . terraform-format-buffer))
 
 (leaf yaml-mode
   :ensure t)
