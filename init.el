@@ -1,5 +1,9 @@
 (setq debug-on-error nil)
 
+(setenv "SHELL" "/bin/zsh")
+
+(add-to-list 'image-types 'svg)
+
 (setq custom-file "~/.emacs.d/emacs-custom.el")
 (load custom-file)
 
@@ -68,6 +72,11 @@
 ;;   :emacs>= 24.3
 ;;   :ensure t)
 
+(leaf nerd-icons
+  :emacs>= 24.3
+  :ensure t)
+;; (nerd-icons-install-fonts)
+
 (leaf doom-themes
   :ensure t
   :custom
@@ -77,11 +86,10 @@
   (load-theme 'doom-dracula t)
   ;; (load-theme 'doom-nord-light t)
   ;; (load-theme 'doom-ayu-light)
+  ;; (load-theme 'doom-ayu-dark)
   (doom-themes-visual-bell-config)
-  (doom-themes-org-config))
-
-(leaf all-the-icons
-  :ensure t)
+  (doom-themes-org-config)
+  (doom-themes-treemacs-config))
 
 (leaf doom-modeline
   :ensure t
@@ -90,8 +98,8 @@
   (doom-modeline-buffer-file-name-style . 'relative-to-project)
   :config (doom-modeline-mode))
 
-(leaf linum-mode
-  :hook (prog-mode-hook))
+;; (leaf linum-mode
+;;   :hook (prog-mode-hook))
 
 (leaf highlight-indent-guides
   :ensure t
@@ -146,6 +154,19 @@
          ("C-x b" . counsel-buffer-or-recentf)
          ("C-x C-b" . counsel-switch-buffer)))
 
+;; from https://github.com/abo-abo/swiper/issues/1068
+(defun my-ivy-with-thing-at-point (cmd &optional dir)
+  "Wrap a call to CMD with setting "
+  (let ((ivy-initial-inputs-alist
+         (list
+          (cons cmd (thing-at-point 'symbol)))))
+    (funcall cmd nil dir)))
+
+(defun counsel-git-grep-at-point ()
+  (interactive)
+  (my-ivy-with-thing-at-point
+   'counsel-git-grep))
+
 (leaf ivy-ghq
   :added "2021-02-16"
   :el-get analyticd/ivy-ghq
@@ -164,17 +185,25 @@
 
 (leaf flycheck
   :emacs>= 24.3
-  :ensure t)
-
-(leaf pos-tip
-  :ensure t)
-
-(leaf flycheck-pos-tip
-  :emacs>= 24.1
   :ensure t
-  :after flycheck pos-tip
-  :custom
-  (flycheck-display-errors-function . #'flycheck-pos-tip-error-messages))
+  :config
+  (leaf pos-tip
+    :ensure t
+    :require t)
+  (leaf flycheck-pos-tip
+    :emacs>= 24.1
+    :ensure t
+    :after flycheck pos-tip)
+  (leaf popup
+    :emacs>= 24.3
+    :ensure t)
+  (leaf flycheck-popup-tip
+    :emacs>= 24
+    :ensure t
+    :after flycheck popup)
+  (leaf flycheck-aspell
+    :ensure t
+    :setq (ispell-program-name . "/opt/homebrew/bin/aspell")))
 
 (leaf magit
   :emacs>= 25.1
@@ -276,7 +305,7 @@
   :require t
   :custom
   (migemo-dictionary . "/opt/homebrew/share/migemo/utf-8/migemo-dict")
-  (migemo-command . "cmigemo")
+  (migemo-command . "/opt/homebrew/bin/cmigemo")
   (migemo-options . '("-q" "--emacs"))
   (migemo-user-dictionary . nil)
   (migemo-coding-system . 'utf-8)
@@ -293,7 +322,16 @@
 
 (leaf treemacs
   :ensure t
-  :custom (treemacs-project-follow-mode . t))
+  :custom
+  (treemacs-project-follow-mode . t)
+  (treemacs-load-theme . "Default")
+  :config
+  (leaf treemacs-nerd-icons
+    :emacs>= 24.3
+    :ensure t
+    :after nerd-icons treemacs
+    :config
+    (treemacs-load-theme "nerd-icons")))
 
 (leaf wakatime-mode
   :doc "Automatic time tracking extension for WakaTime"
@@ -301,6 +339,12 @@
   :added "2022-11-24"
   :ensure t
   :config (global-wakatime-mode t))
+
+(leaf ggtags
+  :ensure t)
+
+(leaf counsel-gtags
+  :ensure t)
 
 ;; -----------------------------------------------------------------------------
 ;; LSP, etc
@@ -323,6 +367,8 @@
   (leaf lsp-ivy
     :ensure t
     :commands lsp-ivy-workspace-symbol)
+  (leaf lsp-treemacs
+    :ensure t)
   (leaf dap-mode
     :emacs>= 26.1
     :ensure t
@@ -437,7 +483,7 @@
 ;; Ruby
 (leaf ruby-mode
   :ensure t
-  :mode ("\\.rb$" "\\.ruby$")
+  :mode ("\\.rb$" "\\.ruby$" "\\.schema$" "\\.jb$")
   :custom ((c-toggle-hungry-state . t)
            (ruby-insert-encoding-magic-comment . nil)
            (electric-indent-mode . t)
@@ -551,6 +597,14 @@
   :mode ("\\.vue$"))
 
 ;; -----------------------------------------------------------------------------
+;; Protobuf
+(leaf protobuf-mode
+  :doc "major mode for editing protocol buffers."
+  :tag "languages" "protobuf" "google"
+  :added "2023-01-26"
+  :ensure t)
+
+;; -----------------------------------------------------------------------------
 ;; Rust
 (leaf rustic
   :emacs>= 26.1
@@ -560,7 +614,7 @@
   :custom
   (smartparens-mode . t)
   (rustic-lsp-server . 'rust-analyzer)
-  (lsp-rust-analyzer-server-command . '("~/.cargo/bin/rust-analyzer"))
+  (lsp-rust-analyzer-server-command . '("rust-analyzer"))
   (rustic-format-trigger . 'on-compile)
   (remove-hook 'rustic-mode-hook 'flycheck-mode)
   (push 'rustic-clippy flycheck-checkers))
@@ -623,19 +677,33 @@
   :ensure t)
 
 ;; -----------------------------------------------------------------------------
-;; Twitter
-(leaf twittering-mode
+;; Android
+(leaf groovy-mode
+  :ensure t)
+
+(leaf gradle-mode
+  :mode ("\\.gradle$")
   :ensure t
-  :init
-  (unless (fboundp 'epa--decode-coding-string)
-    (defalias 'epa--decode-coding-string #'decode-coding-string))
-  :setq
-  (twittering-initial-timeline-spec-string . '(":home"))
-  ;; (twittering-status-format . "%FOLD{%RT{%FACE[bold]{RT}}%i%s>>%r @%C{%Y-%m-%d %H:%M:%S} %@{}\n%FOLD[ ]{%T%RT{\nretweeted by %s @%C{%Y-%m-%d %H:%M:%S}}}}")
-  (twittering-status-format . "@%s %S %R\n%T %@ from %f%L%r%R\n")
-  (twittering-use-master-password . t)
-  (twittering-icon-mode . nil)
-  (twittering-timer-interval . 180))
+  :config
+  (leaf flycheck-gradle
+    :ensure ))
+
+(leaf kotlin-mode
+  :ensure t
+  :config
+  (leaf flycheck-kotlin
+    :ensure t))
+
+;; -----------------------------------------------------------------------------
+;; iOS
+(leaf swift-mode
+  :ensure t
+  :hook (swift-mode . (lambda () (lsp))))
+
+(leaf lsp-sourcekit
+  :ensure t
+  :config
+  (setq lsp-sourcekit-executable (string-trim (shell-command-to-string "xcrun --find sourcekit-lsp"))))
 
 (server-start)
 
