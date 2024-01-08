@@ -58,10 +58,10 @@
 (leaf-keys (("C-x C-o" . other-window)))
 (leaf-keys (("C-c l" . toggle-truncate-lines)))
 
-(leaf ediff
-  :custom
-  (ediff-split-window-function . 'split-window-horizontaly)
-  (ediff-window-setup-function . 'ediff-setup-windows-plain))
+;; (leaf ediff
+;;   :custom
+;;   (ediff-split-window-function . 'split-window-horizontaly)
+;;   (ediff-window-setup-function . 'ediff-setup-windows-plain))
 
 (leaf exec-path-from-shell
   :emacs>= 24.1
@@ -104,6 +104,13 @@
 ;;   :config
 ;;   (load-theme 'dracula))
 
+(leaf nerd-icons
+  :emacs>= 24.3
+  :ensure t)
+
+;; (leaf all-the-icons
+;;   :ensure t)
+
 (leaf doom-modeline
   :ensure t
   :custom
@@ -111,8 +118,10 @@
   (doom-modeline-buffer-file-name-style . 'relative-to-project)
   :config (doom-modeline-mode))
 
-;; (leaf linum-mode
-;;   :hook (prog-mode-hook))
+(leaf global-display-line-numbers-mode
+  :hook (prog-mode-hook))
+
+;; (global-display-line-numbers-mode 0)
 
 (leaf highlight-indent-guides
   :ensure t
