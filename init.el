@@ -1,11 +1,19 @@
-(setq debug-on-error nil)
+(setq debug-on-error t)
+(menu-bar-mode t)
+(tool-bar-mode 0)
 
 (setenv "SHELL" "/bin/zsh")
 
+;; https://github.com/d12frosted/homebrew-emacs-plus/issues/378
+(setenv "LIBRARY_PATH" "/opt/homebrew/opt/libgccjit/lib/gcc/current")
+
 (add-to-list 'image-types 'svg)
 
-(setq custom-file "~/.emacs.d/emacs-custom.el")
+(setq custom-file "~/.emacs.d/emacs-custom-default.el")
 (load custom-file)
+(setq custom-file "~/.emacs.d/emacs-custom.el")
+
+(setq native-comp-async-report-warnings-errors nil)
 
 ;; <leaf-install-code>
 (eval-and-compile
@@ -88,8 +96,13 @@
   ;; (load-theme 'doom-ayu-light)
   ;; (load-theme 'doom-ayu-dark)
   (doom-themes-visual-bell-config)
-  (doom-themes-org-config)
-  (doom-themes-treemacs-config))
+  (doom-themes-org-config))
+
+;; (leaf dracula-theme
+;;   :emacs>= 24.3
+;;   :ensure t
+;;   :config
+;;   (load-theme 'dracula))
 
 (leaf doom-modeline
   :ensure t
@@ -331,7 +344,9 @@
     :ensure t
     :after nerd-icons treemacs
     :config
-    (treemacs-load-theme "nerd-icons")))
+    (treemacs-load-theme "nerd-icons"))
+  (leaf treemacs-projectile
+    :ensure t))
 
 (leaf wakatime-mode
   :doc "Automatic time tracking extension for WakaTime"
@@ -454,8 +469,7 @@
   :ensure t)
 
 (leaf terraform-mode
-  :ensure t
-  :hook (before-save-hook . terraform-format-buffer))
+  :ensure t)
 
 (leaf yaml-mode
   :ensure t)
