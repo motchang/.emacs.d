@@ -1,6 +1,4 @@
-(setq debug-on-error t)
-(menu-bar-mode t)
-(tool-bar-mode 0)
+(setq debug-on-error nil)
 
 (setenv "SHELL" "/bin/zsh")
 
@@ -501,6 +499,18 @@
   :ensure t
   :mode ("\\.plantuml$" "\\.puml$")
   :custom (plantuml-default-exec-mode . 'executable))
+
+(leaf inheritenv
+  :doc "Make temp buffers inherit buffer-local environment variables"
+  :emacs>= 24.4
+  :ensure t
+  :config
+  (leaf mise
+    :doc "Support for `mise' cli"
+    :emacs>= 29.1
+    :ensure t
+    :hook ((after-init-hook . global-mise-mode)
+           (prog-mode-hook . mise-mode))))
 
 ;; -----------------------------------------------------------------------------
 ;; Ruby
