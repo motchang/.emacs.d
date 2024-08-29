@@ -1,4 +1,4 @@
-(setq debug-on-error t)
+(setq debug-on-error nil)
 (menu-bar-mode t)
 (tool-bar-mode 0)
 
