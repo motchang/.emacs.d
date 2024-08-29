@@ -506,17 +506,8 @@
 (leaf csv-mode
   :ensure t)
 
-;; (leaf markdown-mode
-;;   :ensure t
-;;   :hook (markdown-mode-hook . (lambda ()
-;;                                 (add-hook 'after-change-functions
-;;                                           (lambda (&rest _)
-;;                                             (message "wait...")
-;;                                             (run-at-time 3 nil 'save-buffer)
-;;                                             (message "Markdown file saved automatically after edit."))
-;;                                           nil t))))
-
-;; :hook (swift-mode . (lambda () (lsp))))
+(leaf markdown-mode
+  :ensure t)
 
 (leaf terraform-mode
   :ensure t)
