@@ -19,7 +19,6 @@
    'package-archives '(("org" . "https://orgmode.org/elpa/")
                        ("melpa" . "https://melpa.org/packages/")
                        ("gnu" . "https://elpa.gnu.org/packages/")))
-
   (package-initialize)
   (unless (package-installed-p 'leaf)
     (package-refresh-contents)
@@ -38,16 +37,25 @@
     (leaf-keywords-init)))
 ;; </leaf-install-code>
 
-(leaf leaf
-  :config
-  (leaf leaf-convert
-    :ensure t
-    :config (leaf use-package :ensure t))
-  (leaf leaf-tree
-    :ensure t
-    :custom
-    (imenu-list-size . 30)
-    (imenu-list-pisition . 'left)))
+;; Now you can use leaf!
+(leaf leaf-tree :ensure t)
+(leaf leaf-convert :ensure t)
+(leaf transient-dwim
+  :ensure t
+  :bind (("M-=" . transient-dwim-dispatch)))
+
+;; You can also configure builtin package via leaf!
+(leaf cus-start
+  :doc "define customization properties of builtins"
+  :tag "builtin" "internal"
+  :custom ((user-full-name . "Koji Okamoto")
+           (user-mail-address . "motchang@gmail.com")
+           (user-login-name . "motchang")
+           (truncate-lines . t)
+           (menu-bar-mode . t)
+           (tool-bar-mode . nil)
+           (scroll-bar-mode . nil)
+           (indent-tabs-mode . nil)))
 
 (leaf macrostep
   :ensure t
@@ -368,6 +376,10 @@
 (leaf counsel-gtags
   :ensure t)
 
+(leaf auto-highlight-symbol
+  :ensure t
+  :config (global-auto-highlight-symbol-mode t))
+
 ;; -----------------------------------------------------------------------------
 ;; LSP, etc
 (leaf lsp-mode
@@ -434,6 +446,28 @@
          (kill-buffer dap-ui--locals-buffer))))
 
 (add-hook 'dap-terminated-hook 'my/hide-debug-windows)
+
+;; (leaf copilot
+;;   :el-get (copilot
+;;            :type github
+;;            :pkgname "zerolfx/copilot.el")
+;;   :config
+;;   (leaf editorconfig
+;;     :ensure t)
+;;   (leaf s
+;;     :ensure t)
+;;   (leaf dash
+;;     :ensure t))
+
+;; -----------------------------------------------------------------------------
+;; Mise
+(leaf inheritenv
+  :emacs>= 29.1
+  :config
+  (leaf mise
+    :emacs>= 29.1
+    :ensure t
+    :hook (prog-mode-hook)))
 
 ;; -----------------------------------------------------------------------------
 ;; Web, etc
@@ -738,6 +772,58 @@
   :config
   (setq lsp-sourcekit-executable (string-trim (shell-command-to-string "xcrun --find sourcekit-lsp"))))
 
+;; -----------------------------------------------------------------------------
+;; Term
+(leaf mistty
+  :doc "Shell/Comint alternative based on term.el"
+  :ensure t)
+
+
+;; -----------------------------------------------------------------------------
+;; Daily Note
+(defun open-daily-note ()
+  "Copy the notes/template.md file to notes/yyyy-mm-dd.md with today's date and open it in the current buffer."
+  (interactive)
+  (let* ((base-directory (expand-file-name "src/github.com/motchang/notes" (getenv "HOME")))
+         (template-file (expand-file-name "template.md" (expand-file-name "daily_notes" base-directory)))
+         (destination-directory (expand-file-name "daily_notes/" base-directory))
+         (today (format-time-string "%Y-%m-%d"))
+         (destination-file (concat destination-directory today ".md")))
+    (unless (file-exists-p base-directory)
+      (message "Directory %s does not exist" base-directory))
+    (unless (file-exists-p destination-directory)
+      (make-directory destination-directory t))
+    (unless (file-exists-p destination-file)
+      (copy-file template-file destination-file))
+    (find-file destination-file)))
+
+(defun open-in-rubymine ()
+  "Open the current file in RubyMine using the rubymine command."
+  (interactive)
+  (let* ((full-path (buffer-file-name))
+         (git-root (vc-git-root full-path))
+         (relative-path (and git-root (file-relative-name full-path git-root))))
+    (if (and git-root relative-path)
+        (let ((default-directory git-root)  ; Set the default directory to Git root
+              (command (format "rubymine --line %d \"%s\""
+                               (line-number-at-pos)
+                               relative-path)))
+          (call-process-shell-command command nil 0)
+          (message "Opened in RubyMine: %s" relative-path))
+      (message "Not in a Git repository or file not saved"))))
+
+(defun copy-file-path-from-git-root ()
+  "Copy the current file path from the Git root to the macOS clipboard."
+  (interactive)
+  (let* ((full-path (buffer-file-name))
+         (git-root (vc-git-root full-path))
+         (relative-path (file-relative-name full-path git-root)))
+    (when relative-path
+      (shell-command (concat "echo -n '" relative-path "' | pbcopy"))
+      (message "Copied to clipboard: %s" relative-path))))
+
+;; -----------------------------------------------------------------------------
+;; Init
 (server-start)
 
 (provide 'init)
