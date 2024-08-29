@@ -787,6 +787,33 @@
       (copy-file template-file destination-file))
     (find-file destination-file)))
 
+(defun open-in-rubymine ()
+  "Open the current file in RubyMine using the rubymine command."
+  (interactive)
+  (let* ((full-path (buffer-file-name))
+         (git-root (vc-git-root full-path))
+         (relative-path (and git-root (file-relative-name full-path git-root))))
+    (if (and git-root relative-path)
+        (let ((default-directory git-root)  ; Set the default directory to Git root
+              (command (format "rubymine --line %d \"%s\""
+                               (line-number-at-pos)
+                               relative-path)))
+          (call-process-shell-command command nil 0)
+          (message "Opened in RubyMine: %s" relative-path))
+      (message "Not in a Git repository or file not saved"))))
+
+(defun copy-file-path-from-git-root ()
+  "Copy the current file path from the Git root to the macOS clipboard."
+  (interactive)
+  (let* ((full-path (buffer-file-name))
+         (git-root (vc-git-root full-path))
+         (relative-path (file-relative-name full-path git-root)))
+    (when relative-path
+      (shell-command (concat "echo -n '" relative-path "' | pbcopy"))
+      (message "Copied to clipboard: %s" relative-path))))
+
+;; -----------------------------------------------------------------------------
+;; Init
 (server-start)
 
 (provide 'init)
