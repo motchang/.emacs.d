@@ -1,6 +1,4 @@
 (setq debug-on-error nil)
-(menu-bar-mode t)
-(tool-bar-mode 0)
 
 (setenv "SHELL" "/bin/zsh")
 
@@ -66,10 +64,10 @@
 (leaf-keys (("C-x C-o" . other-window)))
 (leaf-keys (("C-c l" . toggle-truncate-lines)))
 
-(leaf ediff
-  :custom
-  (ediff-split-window-function . 'split-window-horizontaly)
-  (ediff-window-setup-function . 'ediff-setup-windows-plain))
+;; (leaf ediff
+;;   :custom
+;;   (ediff-split-window-function . 'split-window-horizontaly)
+;;   (ediff-window-setup-function . 'ediff-setup-windows-plain))
 
 (leaf exec-path-from-shell
   :emacs>= 24.1
@@ -112,6 +110,13 @@
 ;;   :config
 ;;   (load-theme 'dracula))
 
+(leaf nerd-icons
+  :emacs>= 24.3
+  :ensure t)
+
+;; (leaf all-the-icons
+;;   :ensure t)
+
 (leaf doom-modeline
   :ensure t
   :custom
@@ -119,8 +124,10 @@
   (doom-modeline-buffer-file-name-style . 'relative-to-project)
   :config (doom-modeline-mode))
 
-;; (leaf linum-mode
-;;   :hook (prog-mode-hook))
+(leaf global-display-line-numbers-mode
+  :hook (prog-mode-hook))
+
+;; (global-display-line-numbers-mode 0)
 
 (leaf highlight-indent-guides
   :ensure t
@@ -535,6 +542,18 @@
   :ensure t
   :mode ("\\.plantuml$" "\\.puml$")
   :custom (plantuml-default-exec-mode . 'executable))
+
+(leaf inheritenv
+  :doc "Make temp buffers inherit buffer-local environment variables"
+  :emacs>= 24.4
+  :ensure t
+  :config
+  (leaf mise
+    :doc "Support for `mise' cli"
+    :emacs>= 29.1
+    :ensure t
+    :hook ((after-init-hook . global-mise-mode)
+           (prog-mode-hook . mise-mode))))
 
 ;; -----------------------------------------------------------------------------
 ;; Ruby
