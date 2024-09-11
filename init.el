@@ -243,9 +243,11 @@
              (set-default-coding-systems 'utf-8)
              (prefer-coding-system 'utf-8))))
 
-(leaf magithub
+(leaf forge
+  :doc "Access Git forges from Magit"
+  :url "https://github.com/magit/forge"
   :ensure t
-  :config (magithub-feature-autoinject t))
+  :after compat closql emacsql ghub magit markdown-mode yaml)
 
 (leaf git-gutter
   :emacs>= 24.3
