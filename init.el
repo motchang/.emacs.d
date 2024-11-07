@@ -1,4 +1,4 @@
-(setq debug-on-error nil)
+(setq debug-on-error t)
 
 (setenv "SHELL" "/bin/zsh")
 
@@ -462,16 +462,6 @@
 ;;     :ensure t))
 
 ;; -----------------------------------------------------------------------------
-;; Mise
-(leaf inheritenv
-  :emacs>= 29.1
-  :config
-  (leaf mise
-    :emacs>= 29.1
-    :ensure t
-    :hook (prog-mode-hook)))
-
-;; -----------------------------------------------------------------------------
 ;; Web, etc
 (leaf web-mode
   :emacs>= 23.1
@@ -536,6 +526,8 @@
   :mode ("\\.plantuml$" "\\.puml$")
   :custom (plantuml-default-exec-mode . 'executable))
 
+;; -----------------------------------------------------------------------------
+;; Mise
 (leaf inheritenv
   :doc "Make temp buffers inherit buffer-local environment variables"
   :emacs>= 24.4
@@ -727,7 +719,7 @@
   :hook
   (go-mode-hook . lsp)
   (go-mode-hook . my/set-line-spacing-go-mode)
-  (before-save-hook . gofmt-before-save)
+  ;; (before-save-hook . gofmt-before-save)
   :config
   (leaf flycheck-golangci-lint
     :emacs>= 24
