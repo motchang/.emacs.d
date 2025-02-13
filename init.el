@@ -8,8 +8,9 @@
 (add-to-list 'image-types 'svg)
 
 (setq custom-file "~/.emacs.d/emacs-custom-default.el")
-(load custom-file)
+(load custom-file :noerror)
 (setq custom-file "~/.emacs.d/emacs-custom.el")
+(load custom-file :noerror)
 
 (setq native-comp-async-report-warnings-errors nil)
 
@@ -395,6 +396,7 @@
   (lsp-message-project-root-warning . t)
   (create-lockfiles . nil)
   (lsp-prefer-capf . t)
+  (lsp-file-watch-threshold . 1500)
   :config
   (leaf lsp-ui
     :emacs>= 26.1
@@ -512,8 +514,7 @@
 
 (leaf dockerfile-mode
   :ensure t
-  :mode (("Dockerfile" . dockerfile-mode))
-  )
+  :mode (("Dockerfile" . dockerfile-mode)))
 
 (leaf apache-mode
   :ensure t)
@@ -790,16 +791,22 @@
 
 ;; -----------------------------------------------------------------------------
 ;; Daily Note
+(defcustom open-daily-note-notes-directory
+  (expand-file-name "notes" (getenv "HOME"))
+  "Base directory for daily notes."
+  :type 'directory
+  :group 'local)
+
 (defun open-daily-note ()
-  "Copy the notes/template.md file to notes/yyyy-mm-dd.md with today's date and open it in the current buffer."
+  "Copy template.md to yyyy-mm-dd.md with today's date and open it in the current buffer."
   (interactive)
-  (let* ((base-directory (expand-file-name "src/github.com/motchang/notes" (getenv "HOME")))
-         (template-file (expand-file-name "template.md" (expand-file-name "daily_notes" base-directory)))
-         (destination-directory (expand-file-name "daily_notes/" base-directory))
+  (let* ((template-file (expand-file-name "template.md"
+                                        (expand-file-name "daily_notes" open-daily-note-notes-directory)))
+         (destination-directory (expand-file-name "daily_notes/" open-daily-note-notes-directory))
          (today (format-time-string "%Y-%m-%d"))
          (destination-file (concat destination-directory today ".md")))
-    (unless (file-exists-p base-directory)
-      (message "Directory %s does not exist" base-directory))
+    (unless (file-exists-p open-daily-note-notes-directory)
+      (message "Directory %s does not exist" open-daily-note-notes-directory))
     (unless (file-exists-p destination-directory)
       (make-directory destination-directory t))
     (unless (file-exists-p destination-file)
