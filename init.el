@@ -383,6 +383,13 @@
   :ensure t
   :config (global-wakatime-mode t))
 
+(leaf which-key
+  :hook (after-init-hook)
+  :config
+  (with-eval-after-load 'which-key
+    (if (fboundp 'diminish)
+        (diminish 'which-key-mode))))
+
 (leaf ggtags
   :ensure t)
 
