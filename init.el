@@ -858,6 +858,52 @@
       (shell-command (concat "echo -n '" relative-path "' | pbcopy"))
       (message "Copied to clipboard: %s" relative-path))))
 
+
+;; -----------------------------------------------------------------------------
+;;
+(defun open-in-vscode ()
+  "Open current buffer's file in Visual Studio Code.
+If the buffer is not visiting a file, prompt for saving.
+On macOS, uses 'code' command from VSCode.
+On Windows, searches for Code.exe in common installation paths.
+On Linux, uses 'code' command from VSCode."
+  (interactive)
+  (let ((file-path (buffer-file-name))
+        (vscode-cmd
+         (cond
+          ((eq system-type 'darwin) "code")
+          ((eq system-type 'windows-nt)
+           (cond
+            ((file-exists-p "C:/Program Files/Microsoft VS Code/Code.exe")
+             "C:/Program Files/Microsoft VS Code/Code.exe")
+            ((file-exists-p "C:/Program Files (x86)/Microsoft VS Code/Code.exe")
+             "C:/Program Files (x86)/Microsoft VS Code/Code.exe")
+            (t "code")))
+          (t "code"))))
+    (cond
+     ;; If buffer is not visiting a file, prompt to save
+     ((null file-path)
+      (if (buffer-modified-p)
+          (when (y-or-n-p "Buffer is not visiting a file. Save it first? ")
+            (call-interactively 'save-buffer)
+            (setq file-path (buffer-file-name)))
+        (message "No file associated with this buffer")))
+     ;; If buffer is modified, prompt to save
+     ((and file-path (buffer-modified-p))
+      (when (y-or-n-p "Buffer is modified. Save first? ")
+        (save-buffer))))
+
+    ;; Open in VSCode if we have a file path
+    (when file-path
+      (if (executable-find vscode-cmd)
+          (progn
+            (start-process "vscode" nil vscode-cmd file-path)
+            (message "Opened %s in VSCode" file-path))
+        (message "Could not find VSCode executable. Is it installed and in your PATH?")))))
+
+;; Optional: Bind to a key
+;; (global-set-key (kbd "C-c v") 'open-in-vscode)
+
 ;; -----------------------------------------------------------------------------
 ;; Init
 (server-start)
