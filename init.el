@@ -390,6 +390,10 @@
     (if (fboundp 'diminish)
         (diminish 'which-key-mode))))
 
+(leaf amx
+  :emacs>= 24.4
+  :ensure t)
+
 (leaf ggtags
   :ensure t)
 
