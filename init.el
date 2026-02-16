@@ -13,6 +13,8 @@
 
 (setq native-comp-async-report-warnings-errors nil)
 
+(set-frame-font "Source Code Pro 13" nil t)
+
 ;; <leaf-install-code>
 (eval-and-compile
   (customize-set-variable
