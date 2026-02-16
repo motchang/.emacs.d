@@ -413,6 +413,8 @@
   :hook (prog-major-mode lsp-prog-major-mode-enable)
   :commands (lsp lsp-deferred)
   :custom
+  (lsp-auto-guess-root . t)
+  (lsp-document-sync-method . 'incremental)
   (lsp-inhibit-message . t)
   (lsp-message-project-root-warning . t)
   (create-lockfiles . nil)
@@ -422,7 +424,16 @@
   (leaf lsp-ui
     :emacs>= 26.1
     :ensure t
-    :after lsp-mode markdown-mode)
+    :after lsp-mode markdown-mode
+    :custom
+    (lsp-ui-doc-enable . t)
+    (lsp-ui-doc-header . t)
+    (lsp-ui-include-signature . t)
+    (lsp-ui-doc-use-childframe . t)
+    (lsp-ui-doc-use-webkit . t)
+    (lsp-ui-sideline-show-symbol . t)
+    (lsp-ui-sideline-show-hover . t)
+    (lsp-ui-peek-enable . t))
   (leaf lsp-ivy
     :ensure t
     :commands lsp-ivy-workspace-symbol)
