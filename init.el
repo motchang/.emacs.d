@@ -93,24 +93,27 @@
   :ensure t)
 ;; (nerd-icons-install-fonts)
 
-(leaf doom-themes
-  :ensure t
-  :custom
-  (doom-themes-enable-bold . t)
-  (doom-themes-enable-italic . t)
-  :config
-  (load-theme 'doom-dracula t)
-  ;; (load-theme 'doom-nord-light t)
-  ;; (load-theme 'doom-ayu-light)
-  ;; (load-theme 'doom-ayu-dark)
-  (doom-themes-visual-bell-config)
-  (doom-themes-org-config))
-
-;; (leaf dracula-theme
-;;   :emacs>= 24.3
+;; (leaf doom-themes
 ;;   :ensure t
+;;   :custom
+;;   (doom-themes-enable-bold . t)
+;;   (doom-themes-enable-italic . t)
 ;;   :config
-;;   (load-theme 'dracula))
+;;   ;; (load-theme 'doom-dracula t)
+;;   ;; (load-theme 'doom-nord-light t)
+;;   ;; (load-theme 'doom-nord t)
+;;   ;; (load-theme 'doom-nord-aurora t)
+;;   (load-theme 'doom-dracula t)
+;;   ;; (load-theme 'doom-ayu-light)
+;;   ;; (load-theme 'doom-ayu-dark)
+;;   (doom-themes-visual-bell-config)
+;;   (doom-themes-org-config))
+
+(leaf dracula-theme
+  :emacs>= 24.3
+  :ensure t
+  :config
+  (load-theme 'dracula))
 
 (leaf nerd-icons
   :emacs>= 24.3
