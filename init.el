@@ -904,6 +904,61 @@ On Linux, uses 'code' command from VSCode."
 ;; Optional: Bind to a key
 ;; (global-set-key (kbd "C-c v") 'open-in-vscode)
 
+
+;; -----------------------------------------------------------------------------
+;;
+(defun open-in-goland ()
+  "Open current buffer's file in GoLand.
+If the buffer is not visiting a file, prompt for saving.
+Requires `goland` command line launcher to be installed.
+On macOS: can be installed via Tools > Create Command-line Launcher in GoLand
+On Linux: usually installed automatically in /usr/local/bin
+On Windows: needs to be added to PATH manually"
+  (interactive)
+  (let ((file-path (buffer-file-name))
+        (goland-cmd
+         (cond
+          ((eq system-type 'darwin)
+           (cond
+            ((file-exists-p "/usr/local/bin/goland") "/usr/local/bin/goland")
+            ((file-exists-p "~/Applications/GoLand.app/Contents/MacOS/goland")
+             "~/Applications/GoLand.app/Contents/MacOS/goland")
+            (t "goland")))
+          ((eq system-type 'windows-nt)
+           (cond
+            ((file-exists-p "C:/Program Files/JetBrains/GoLand/bin/goland64.exe")
+             "C:/Program Files/JetBrains/GoLand/bin/goland64.exe")
+            ((file-exists-p "C:/Program Files (x86)/JetBrains/GoLand/bin/goland.exe")
+             "C:/Program Files (x86)/JetBrains/GoLand/bin/goland.exe")
+            (t "goland")))
+          (t "goland"))))
+    (cond
+     ;; If buffer is not visiting a file, prompt to save
+     ((null file-path)
+      (if (buffer-modified-p)
+          (when (y-or-n-p "Buffer is not visiting a file. Save it first? ")
+            (call-interactively 'save-buffer)
+            (setq file-path (buffer-file-name)))
+        (message "No file associated with this buffer")))
+     ;; If buffer is modified, prompt to save
+     ((and file-path (buffer-modified-p))
+      (when (y-or-n-p "Buffer is modified. Save first? ")
+        (save-buffer))))
+
+    ;; Open in GoLand if we have a file path
+    (when file-path
+      (if (executable-find goland-cmd)
+          (progn
+            (start-process "goland" nil goland-cmd file-path)
+            (message "Opened %s in GoLand" file-path))
+        (message "Could not find GoLand executable. Is it installed and the command-line launcher configured?
+On macOS: Tools > Create Command-line Launcher
+On Linux: Should be installed automatically
+On Windows: Add GoLand bin directory to PATH")))))
+
+;; Optional: Bind to a key
+;; (global-set-key (kbd "C-c g") 'open-in-goland)
+
 ;; -----------------------------------------------------------------------------
 ;; Init
 (server-start)
