@@ -1,8 +1,6 @@
 ;; -*- lexical-binding: t; -*-
 (setq debug-on-error nil)
 
-(setenv "SHELL" "/bin/zsh")
-
 ;; https://github.com/d12frosted/homebrew-emacs-plus/issues/378
 (setenv "LIBRARY_PATH" "/opt/homebrew/opt/libgccjit/lib/gcc/current")
 
