@@ -746,6 +746,7 @@
 (leaf go-mode
   :ensure t
   :custom
+  (tab-width . 4)
   (exec-path-from-shell-copy-env . "GOPATH")
   (flycheck-mode . t)
   (gofmt-command . "goimports")
