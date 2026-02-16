@@ -355,20 +355,26 @@
   :custom
   (direnv-mode . t))
 
-(leaf treemacs
-  :ensure t
-  :custom
-  (treemacs-project-follow-mode . t)
-  (treemacs-load-theme . "Default")
-  :config
-  (leaf treemacs-nerd-icons
-    :emacs>= 24.3
-    :ensure t
-    :after nerd-icons treemacs
-    :config
-    (treemacs-load-theme "nerd-icons"))
-  (leaf treemacs-projectile
-    :ensure t))
+;; (leaf treemacs
+;;   :ensure t
+;;   :custom
+;;   (treemacs-project-follow-mode . t)
+;;   (treemacs-load-theme . "Default")
+;;   (treemacs-filewatch-mode . nil)
+;;   (treemacs-git-mode . nil)
+;;   (treemacs-file-event-delay . 5000)
+;;   :config
+;;   (leaf treemacs-nerd-icons
+;;     :emacs>= 24.3
+;;     :ensure t
+;;     :after nerd-icons treemacs
+;;     :config
+;;     (treemacs-load-theme "nerd-icons"))
+;;   (leaf treemacs-projectile
+;;     :ensure t))
+
+(leaf neotree
+  :ensure t)
 
 (leaf wakatime-mode
   :doc "Automatic time tracking extension for WakaTime"
