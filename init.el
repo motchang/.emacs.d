@@ -32,6 +32,7 @@
     ;; optional packages if you want to use :hydra, :el-get, :blackout,,,
     (leaf hydra :ensure t)
     (leaf el-get :ensure t)
+    (leaf quelpa :ensure t)
     (leaf blackout :ensure t)
 
     :config
@@ -93,31 +94,11 @@
   :ensure t)
 ;; (nerd-icons-install-fonts)
 
-;; (leaf doom-themes
-;;   :ensure t
-;;   :custom
-;;   (doom-themes-enable-bold . t)
-;;   (doom-themes-enable-italic . t)
-;;   :config
-;;   ;; (load-theme 'doom-dracula t)
-;;   ;; (load-theme 'doom-nord-light t)
-;;   ;; (load-theme 'doom-nord t)
-;;   ;; (load-theme 'doom-nord-aurora t)
-;;   (load-theme 'doom-dracula t)
-;;   ;; (load-theme 'doom-ayu-light)
-;;   ;; (load-theme 'doom-ayu-dark)
-;;   (doom-themes-visual-bell-config)
-;;   (doom-themes-org-config))
-
 (leaf dracula-theme
   :emacs>= 24.3
   :ensure t
   :config
   (load-theme 'dracula))
-
-(leaf nerd-icons
-  :emacs>= 24.3
-  :ensure t)
 
 ;; (leaf all-the-icons
 ;;   :ensure t)
@@ -200,9 +181,9 @@
   (my-ivy-with-thing-at-point
    'counsel-git-grep))
 
+(quelpa '(ivy-ghq :fetcher github :repo "analyticd/ivy-ghq"))
 (leaf ivy-ghq
   :added "2021-02-16"
-  :el-get analyticd/ivy-ghq
   :require t
   :bind (("C-]" . ivy-ghq-open))
   :custom
@@ -364,7 +345,8 @@
   (leaf treemacs-nerd-icons
     :emacs>= 24.3
     :ensure t
-    :after nerd-icons treemacs
+    :after treemacs nerd-icons
+    :require t
     :config
     (treemacs-load-theme "nerd-icons"))
   (leaf treemacs-projectile
@@ -591,8 +573,8 @@
     :hook ((ruby-mode-hook . inf-ruby-minor-mode)
            (inf-ruby-mode-hook . ansi-color-for-comint-mode-on)))
 
+  (quelpa '(ruby-block :fetcher github :repo "juszczakn/ruby-block"))
   (leaf ruby-block
-    :el-get juszczakn/ruby-block
     :require t
     :custom (ruby-block-highlight-toggle . t)
     :hook (ruby-block-mode . rspec-mode-hook))
