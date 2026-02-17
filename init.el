@@ -1,6 +1,4 @@
-(setq debug-on-error t)
-
-(setenv "SHELL" "/bin/zsh")
+(setq debug-on-error nil)
 
 ;; https://github.com/d12frosted/homebrew-emacs-plus/issues/378
 (setenv "LIBRARY_PATH" "/opt/homebrew/opt/libgccjit/lib/gcc/current")
@@ -13,6 +11,8 @@
 (load custom-file :noerror)
 
 (setq native-comp-async-report-warnings-errors nil)
+
+(set-frame-font "Source Code Pro 13" nil t)
 
 ;; <leaf-install-code>
 (eval-and-compile
@@ -31,6 +31,7 @@
     ;; optional packages if you want to use :hydra, :el-get, :blackout,,,
     (leaf hydra :ensure t)
     (leaf el-get :ensure t)
+    (leaf quelpa :ensure t)
     (leaf blackout :ensure t)
 
     :config
@@ -92,28 +93,11 @@
   :ensure t)
 ;; (nerd-icons-install-fonts)
 
-(leaf doom-themes
-  :ensure t
-  :custom
-  (doom-themes-enable-bold . t)
-  (doom-themes-enable-italic . t)
-  :config
-  (load-theme 'doom-dracula t)
-  ;; (load-theme 'doom-nord-light t)
-  ;; (load-theme 'doom-ayu-light)
-  ;; (load-theme 'doom-ayu-dark)
-  (doom-themes-visual-bell-config)
-  (doom-themes-org-config))
-
-;; (leaf dracula-theme
-;;   :emacs>= 24.3
-;;   :ensure t
-;;   :config
-;;   (load-theme 'dracula))
-
-(leaf nerd-icons
+(leaf dracula-theme
   :emacs>= 24.3
-  :ensure t)
+  :ensure t
+  :config
+  (load-theme 'dracula))
 
 ;; (leaf all-the-icons
 ;;   :ensure t)
@@ -196,9 +180,9 @@
   (my-ivy-with-thing-at-point
    'counsel-git-grep))
 
+(quelpa '(ivy-ghq :fetcher github :repo "analyticd/ivy-ghq"))
 (leaf ivy-ghq
   :added "2021-02-16"
-  :el-get analyticd/ivy-ghq
   :require t
   :bind (("C-]" . ivy-ghq-open))
   :custom
@@ -360,11 +344,15 @@
   (leaf treemacs-nerd-icons
     :emacs>= 24.3
     :ensure t
-    :after nerd-icons treemacs
+    :after treemacs nerd-icons
+    :require t
     :config
     (treemacs-load-theme "nerd-icons"))
   (leaf treemacs-projectile
     :ensure t))
+
+;; (leaf neotree
+;;   :ensure t)
 
 (leaf wakatime-mode
   :doc "Automatic time tracking extension for WakaTime"
@@ -372,6 +360,17 @@
   :added "2022-11-24"
   :ensure t
   :config (global-wakatime-mode t))
+
+(leaf which-key
+  :hook (after-init-hook)
+  :config
+  (with-eval-after-load 'which-key
+    (if (fboundp 'diminish)
+        (diminish 'which-key-mode))))
+
+(leaf amx
+  :emacs>= 24.4
+  :ensure t)
 
 (leaf ggtags
   :ensure t)
@@ -392,6 +391,8 @@
   :hook (prog-major-mode lsp-prog-major-mode-enable)
   :commands (lsp lsp-deferred)
   :custom
+  (lsp-auto-guess-root . t)
+  (lsp-document-sync-method . 'incremental)
   (lsp-inhibit-message . t)
   (lsp-message-project-root-warning . t)
   (create-lockfiles . nil)
@@ -401,7 +402,16 @@
   (leaf lsp-ui
     :emacs>= 26.1
     :ensure t
-    :after lsp-mode markdown-mode)
+    :after lsp-mode markdown-mode
+    :custom
+    (lsp-ui-doc-enable . t)
+    (lsp-ui-doc-header . t)
+    (lsp-ui-include-signature . t)
+    (lsp-ui-doc-use-childframe . t)
+    (lsp-ui-doc-use-webkit . t)
+    (lsp-ui-sideline-show-symbol . t)
+    (lsp-ui-sideline-show-hover . t)
+    (lsp-ui-peek-enable . t))
   (leaf lsp-ivy
     :ensure t
     :commands lsp-ivy-workspace-symbol)
@@ -562,8 +572,8 @@
     :hook ((ruby-mode-hook . inf-ruby-minor-mode)
            (inf-ruby-mode-hook . ansi-color-for-comint-mode-on)))
 
+  (quelpa '(ruby-block :fetcher github :repo "juszczakn/ruby-block"))
   (leaf ruby-block
-    :el-get juszczakn/ruby-block
     :require t
     :custom (ruby-block-highlight-toggle . t)
     :hook (ruby-block-mode . rspec-mode-hook))
@@ -714,6 +724,7 @@
 (leaf go-mode
   :ensure t
   :custom
+  (tab-width . 4)
   (exec-path-from-shell-copy-env . "GOPATH")
   (flycheck-mode . t)
   (gofmt-command . "goimports")
@@ -737,6 +748,30 @@
     :after go-mode
     :custom
     (go-test-args . "-v")))
+
+(defun open-in-goland ()
+  "Open current buffer's file in GoLand."
+  (interactive)
+  (let ((file-path (buffer-file-name)))
+    (cond
+     ((null file-path)
+      (if (buffer-modified-p)
+          (when (y-or-n-p "Buffer is not visiting a file. Save it first? ")
+            (call-interactively 'save-buffer)
+            (setq file-path (buffer-file-name)))
+        (message "No file associated with this buffer")))
+     ((buffer-modified-p)
+      (when (y-or-n-p "Buffer is modified. Save first? ")
+        (save-buffer))))
+    (when file-path
+      (if (executable-find "goland")
+          (progn
+            (start-process "goland" nil "goland" file-path)
+            (message "Opened %s in GoLand" file-path))
+        (message "Could not find GoLand executable.")))))
+
+;; Optional: Bind to a key
+;; (global-set-key (kbd "C-c g") 'open-in-goland)
 
 ;; -----------------------------------------------------------------------------
 ;; Ocaml
@@ -824,6 +859,33 @@
     (when relative-path
       (shell-command (concat "echo -n '" relative-path "' | pbcopy"))
       (message "Copied to clipboard: %s" relative-path))))
+
+
+;; -----------------------------------------------------------------------------
+;;
+(defun open-in-vscode ()
+  "Open current buffer's file in Visual Studio Code."
+  (interactive)
+  (let ((file-path (buffer-file-name)))
+    (cond
+     ((null file-path)
+      (if (buffer-modified-p)
+          (when (y-or-n-p "Buffer is not visiting a file. Save it first? ")
+            (call-interactively 'save-buffer)
+            (setq file-path (buffer-file-name)))
+        (message "No file associated with this buffer")))
+     ((buffer-modified-p)
+      (when (y-or-n-p "Buffer is modified. Save first? ")
+        (save-buffer))))
+    (when file-path
+      (if (executable-find "code")
+          (progn
+            (start-process "vscode" nil "code" file-path)
+            (message "Opened %s in VSCode" file-path))
+        (message "Could not find VSCode executable.")))))
+
+;; Optional: Bind to a key
+;; (global-set-key (kbd "C-c v") 'open-in-vscode)
 
 ;; -----------------------------------------------------------------------------
 ;; Init
