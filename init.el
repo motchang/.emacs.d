@@ -1,4 +1,3 @@
-;; -*- lexical-binding: t; -*-
 (setq debug-on-error nil)
 
 ;; https://github.com/d12frosted/homebrew-emacs-plus/issues/378
