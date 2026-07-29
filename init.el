@@ -1,7 +1,15 @@
 (setq debug-on-error nil)
 
 ;; https://github.com/d12frosted/homebrew-emacs-plus/issues/378
-(setenv "LIBRARY_PATH" "/opt/homebrew/opt/libgccjit/lib/gcc/current")
+;; libgccjit's internal driver doesn't auto-detect the macOS SDK sysroot the
+;; way the `gcc` frontend does, so `ld` fails with "library 'System' not
+;; found" unless the SDK's usr/lib is added explicitly.
+(setenv "LIBRARY_PATH"
+        (string-join
+         (list "/opt/homebrew/opt/gcc/lib/gcc/current/gcc/aarch64-apple-darwin24/16"
+               (concat (string-trim (shell-command-to-string "xcrun --show-sdk-path"))
+                       "/usr/lib"))
+         ":"))
 
 (add-to-list 'image-types 'svg)
 
