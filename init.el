@@ -13,10 +13,15 @@
 
 (add-to-list 'image-types 'svg)
 
-(setq custom-file "~/.emacs.d/emacs-custom-default.el")
-(load custom-file :noerror)
-(setq custom-file "~/.emacs.d/emacs-custom.el")
-(load custom-file :noerror)
+;; Where Customize writes back. init.el is authoritative; this file is
+;; secondary, so load it here and let the later `leaf' :custom forms win.
+;; ~/.emacs.d is a symlink to the repository, so go through
+;; `user-emacs-directory' instead of hardcoding the path: that keeps working
+;; if HOME changes or the config moves to the XDG location.
+(setq custom-file (expand-file-name "emacs-custom.el" user-emacs-directory))
+(if (file-exists-p custom-file)
+    (load custom-file nil :nomessage)
+  (message "custom-file not found: %s" custom-file))
 
 (setq native-comp-async-report-warnings-errors nil)
 
@@ -308,7 +313,7 @@
 (leaf yasnippet
   :ensure t
   :config (yas-global-mode t)
-  (cons company-backends (cons 'company-yasnippet nil))
+  (add-to-list 'company-backends 'company-yasnippet)
   (leaf yasnippet-snippets
     :ensure t)
   (leaf ivy-yasnippet
@@ -396,7 +401,7 @@
   :emacs>= 26.1
   :ensure t
   :after spinner markdown-mode lv
-  :hook (prog-major-mode lsp-prog-major-mode-enable)
+  ;; No global hook here: `lsp' is started per language (go/typescript/swift).
   :commands (lsp lsp-deferred)
   :custom
   (lsp-auto-guess-root . t)
@@ -564,13 +569,13 @@
 (leaf ruby-mode
   :ensure t
   :mode ("\\.rb$" "\\.ruby$" "\\.schema$" "\\.jb$")
-  :custom ((c-toggle-hungry-state . t)
-           (ruby-insert-encoding-magic-comment . nil)
+  :custom ((ruby-insert-encoding-magic-comment . nil)
            (electric-indent-mode . t)
            (electric-layout-mode . t)
-           (electric-pair-mode . 0)
-           (truncate-lines . 0)
-           (ruby-indent-lebel . 2)
+           ;; 0 is non-nil in Lisp, so `custom-set-minor-mode' read it as
+           ;; "enable" and turned the mode ON.  Use nil to actually disable.
+           (electric-pair-mode . nil)
+           (ruby-indent-level . 2)
            (ruby-indent-tabs-mode . nil))
   :config
   (leaf inf-ruby
@@ -584,7 +589,7 @@
   (leaf ruby-block
     :require t
     :custom (ruby-block-highlight-toggle . t)
-    :hook (ruby-block-mode . rspec-mode-hook))
+    :hook (ruby-mode-hook . ruby-block-mode))
 
   (leaf ruby-end
     :ensure t
@@ -674,8 +679,7 @@
            (typescript-indent-level . 2)
            (flycheck-mode . t)
            (flycheck-check-syntax-automatically . '(save mode-enabled))
-           (eldoc-mode . t)
-           (company-m))
+           (eldoc-mode . t))
   :mode ("\\.ts[x]$")
   :hook (typescript-mode-hook . lsp))
 
@@ -685,7 +689,7 @@
 
 (leaf json-mode
   :ensure t
-  :after js json-reformat json-snatcher
+  :after js json-snatcher
   :custom (js-indent-level . 2))
 
 (leaf vue-mode
@@ -708,12 +712,15 @@
   :mode ("\\.rs$")
   :after flycheck xterm-color markdown-mode spinner
   :custom
-  (smartparens-mode . t)
   (rustic-lsp-server . 'rust-analyzer)
   (lsp-rust-analyzer-server-command . '("rust-analyzer"))
   (rustic-format-trigger . 'on-compile)
+  :config
+  ;; `:custom' only takes (VAR . VALUE) pairs.  These two are expressions, so
+  ;; leaving them there expanded into `customize-set-variable' calls that set
+  ;; `flycheck-checkers' to nil, wiping every registered checker.
   (remove-hook 'rustic-mode-hook 'flycheck-mode)
-  (push 'rustic-clippy flycheck-checkers))
+  (add-to-list 'flycheck-checkers 'rustic-clippy))
 
 (leaf quickrun
   :emacs>= 24.3
@@ -807,7 +814,7 @@
   :ensure t
   :config
   (leaf flycheck-gradle
-    :ensure ))
+    :ensure t))
 
 (leaf kotlin-mode
   :ensure t
