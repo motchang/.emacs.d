@@ -70,7 +70,16 @@
            (menu-bar-mode . t)
            (tool-bar-mode . nil)
            (scroll-bar-mode . nil)
-           (indent-tabs-mode . nil)))
+           (indent-tabs-mode . nil)
+           (column-number-mode . t)
+           (confirm-kill-emacs . 'yes-or-no-p)
+           (make-backup-files . nil)
+           (kill-ring-max . 100)
+           (visible-bell . t)
+           (diff-switches . "-u -w")
+           ;; 100 or more means "never recenter"; the previous value of 1 was
+           ;; effectively a no-op.
+           (scroll-conservatively . 101)))
 
 (leaf macrostep
   :ensure t
@@ -79,10 +88,52 @@
 (leaf-keys (("C-x C-o" . other-window)))
 (leaf-keys (("C-c l" . toggle-truncate-lines)))
 
-;; (leaf ediff
-;;   :custom
-;;   (ediff-split-window-function . 'split-window-horizontaly)
-;;   (ediff-window-setup-function . 'ediff-setup-windows-plain))
+(leaf ediff
+  :doc "a comprehensive visual interface to diff & patch"
+  :tag "builtin"
+  :custom
+  ;; The old commented-out version spelled this `split-window-horizontaly',
+  ;; which is not a function -- ediff died with void-function on startup.
+  (ediff-split-window-function . 'split-window-horizontally)
+  (ediff-window-setup-function . 'ediff-setup-windows-plain))
+
+(leaf recentf
+  :doc "keep track of recently opened files"
+  :tag "builtin"
+  :custom ((recentf-max-saved-items . 1000)
+           ;; `recentf-exclude' holds regexps, so anchor it: the old value
+           ;; ".recentf" also matched things like my-recentf-notes.md.
+           (recentf-exclude . '("/recentf\\'"))
+           (recentf-mode . t)))
+
+(leaf winner
+  :doc "restore old window configurations"
+  :tag "builtin"
+  :custom (winner-mode . t))
+
+(leaf hl-line
+  :doc "highlight the current line"
+  :tag "builtin"
+  :custom (global-hl-line-mode . t))
+
+(leaf autorevert
+  :doc "revert buffers when files on disk change"
+  :tag "builtin"
+  :custom (global-auto-revert-mode . t))
+
+(leaf cc-mode
+  :doc "major mode for editing C and similar languages"
+  :tag "builtin"
+  :custom (c-basic-offset . 2))
+
+;; Strip trailing whitespace on save in code buffers only: in Markdown a
+;; trailing double space is a meaningful hard line break, and this used to be
+;; a global `before-save-hook'.
+(defun my/enable-delete-trailing-whitespace ()
+  "Delete trailing whitespace before saving the current buffer."
+  (add-hook 'before-save-hook #'delete-trailing-whitespace nil t))
+
+(add-hook 'prog-mode-hook #'my/enable-delete-trailing-whitespace)
 
 (leaf exec-path-from-shell
   :emacs>= 24.1
@@ -110,7 +161,10 @@
   :emacs>= 24.3
   :ensure t
   :config
-  (load-theme 'dracula))
+  ;; Pass NO-CONFIRM: without it `load-theme' prompts at startup unless the
+  ;; theme's hash is listed in `custom-safe-themes' (which lived in the
+  ;; custom file).
+  (load-theme 'dracula t))
 
 ;; (leaf all-the-icons
 ;;   :ensure t)
@@ -122,8 +176,10 @@
   (doom-modeline-buffer-file-name-style . 'relative-to-project)
   :config (doom-modeline-mode))
 
-(leaf global-display-line-numbers-mode
-  :hook (prog-mode-hook))
+(leaf display-line-numbers
+  :doc "interface for display-line-numbers"
+  :tag "builtin"
+  :custom (global-display-line-numbers-mode . t))
 
 ;; (global-display-line-numbers-mode 0)
 
@@ -198,8 +254,8 @@
   :added "2021-02-16"
   :require t
   :bind (("C-]" . ivy-ghq-open))
-  :custom
-  (ivy-ghq-command . "~/bin/ghq"))
+  :custom ((ivy-ghq-command . "~/bin/ghq")
+           (ivy-ghq-command-arg-root . "~/bin/")))
 
 (leaf ace-window
   :ensure t
@@ -372,6 +428,14 @@
   :tag "comm" "calendar"
   :added "2022-11-24"
   :ensure t
+  ;; Never run the wakatime-cli update check.  wakatime-mode.el carries no
+  ;; `lexical-binding' cookie, so the `url-retrieve' callbacks introduced
+  ;; upstream in 464ea0ea (2026-05-20, "Automatically download wakatime-cli on
+  ;; launch") are not closures: the process filter dies with "void-variable
+  ;; callback" every time the check fires.  wakatime-cli is already installed,
+  ;; so skip the check and update the binary by hand.  Upstream PR #77 (open
+  ;; since 2024) adds the cookie and would fix this.
+  :custom (wakatime-update-check-interval . most-positive-fixnum)
   :config (global-wakatime-mode t))
 
 (leaf which-key
@@ -662,7 +726,8 @@
 ;; -----------------------------------------------------------------------------
 ;; Javascript / TypeScript
 (leaf js
-  :custom (js-indent-level . 2))
+  :custom ((js-indent-level . 2)
+           (js-switch-indent-offset . 2)))
 
 (leaf js2-mode
   :emacs>= 24.1
@@ -674,14 +739,18 @@
 (leaf typescript-mode
   :emacs>= 24.3
   :ensure t
+  ;; `flycheck-mode' is a buffer-local minor mode, so setting it in `:custom'
+  ;; only flipped the global default: doom-modeline then believed flycheck was
+  ;; live in every buffer and read the void `flycheck-last-status-change'.
+  ;; Enable it from the hook instead.  `eldoc-mode' is dropped outright --
+  ;; `global-eldoc-mode' is on by default.
   :custom ((indent-tabs-mode . nil)
            (tab-width . 2)
            (typescript-indent-level . 2)
-           (flycheck-mode . t)
-           (flycheck-check-syntax-automatically . '(save mode-enabled))
-           (eldoc-mode . t))
+           (flycheck-check-syntax-automatically . '(save mode-enabled)))
   :mode ("\\.ts[x]$")
-  :hook (typescript-mode-hook . lsp))
+  :hook ((typescript-mode-hook . lsp)
+         (typescript-mode-hook . flycheck-mode)))
 
 (leaf prettier-js
   :ensure t
@@ -741,10 +810,12 @@
   :custom
   (tab-width . 4)
   (exec-path-from-shell-copy-env . "GOPATH")
-  (flycheck-mode . t)
   (gofmt-command . "goimports")
   :hook
   (go-mode-hook . lsp)
+  ;; Buffer-local minor mode: enable it here rather than in `:custom', which
+  ;; would only set the global default.
+  (go-mode-hook . flycheck-mode)
   (go-mode-hook . my/set-line-spacing-go-mode)
   ;; (before-save-hook . gofmt-before-save)
   :config
@@ -842,7 +913,7 @@
 ;; -----------------------------------------------------------------------------
 ;; Daily Note
 (defcustom open-daily-note-notes-directory
-  (expand-file-name "notes" (getenv "HOME"))
+  (expand-file-name "src/github.dena.jp/koji-okamoto/notes" (getenv "HOME"))
   "Base directory for daily notes."
   :type 'directory
   :group 'local)
