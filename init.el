@@ -1,15 +1,11 @@
 (setq debug-on-error nil)
 
-;; https://github.com/d12frosted/homebrew-emacs-plus/issues/378
-;; libgccjit's internal driver doesn't auto-detect the macOS SDK sysroot the
-;; way the `gcc` frontend does, so `ld` fails with "library 'System' not
-;; found" unless the SDK's usr/lib is added explicitly.
-(setenv "LIBRARY_PATH"
-        (string-join
-         (list "/opt/homebrew/opt/gcc/lib/gcc/current/gcc/aarch64-apple-darwin24/16"
-               (concat (string-trim (shell-command-to-string "xcrun --show-sdk-path"))
-                       "/usr/lib"))
-         ":"))
+;; Emacs.app bundles its own libgccjit runtime and sets LIBRARY_PATH itself
+;; at startup, so don't setenv it here: `setenv' replaces rather than
+;; appends, which wipes out that value and breaks native compilation with
+;; "ld: library 'emutls_w' not found". If switching back to emacs-plus,
+;; append to LIBRARY_PATH instead of replacing it (see
+;; d12frosted/homebrew-emacs-plus issue 378).
 
 (add-to-list 'image-types 'svg)
 
