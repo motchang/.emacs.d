@@ -1,3 +1,5 @@
+;;; init.el --- Personal Emacs configuration -*- lexical-binding: t -*-
+
 (setq debug-on-error nil)
 
 ;; Emacs.app bundles its own libgccjit runtime and sets LIBRARY_PATH itself
