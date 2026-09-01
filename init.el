@@ -250,7 +250,7 @@
   :added "2021-02-16"
   :require t
   :bind (("C-]" . ivy-ghq-open))
-  :custom ((ivy-ghq-command . "~/bin/ghq")
+  :custom ((ivy-ghq-command . "ghq")
            (ivy-ghq-command-arg-root . "~/bin/")))
 
 (leaf ace-window
@@ -419,20 +419,20 @@
 ;; (leaf neotree
 ;;   :ensure t)
 
-(leaf wakatime-mode
-  :doc "Automatic time tracking extension for WakaTime"
-  :tag "comm" "calendar"
-  :added "2022-11-24"
-  :ensure t
-  ;; Never run the wakatime-cli update check.  wakatime-mode.el carries no
-  ;; `lexical-binding' cookie, so the `url-retrieve' callbacks introduced
-  ;; upstream in 464ea0ea (2026-05-20, "Automatically download wakatime-cli on
-  ;; launch") are not closures: the process filter dies with "void-variable
-  ;; callback" every time the check fires.  wakatime-cli is already installed,
-  ;; so skip the check and update the binary by hand.  Upstream PR #77 (open
-  ;; since 2024) adds the cookie and would fix this.
-  :custom (wakatime-update-check-interval . most-positive-fixnum)
-  :config (global-wakatime-mode t))
+;; (leaf wakatime-mode
+;;   :doc "Automatic time tracking extension for WakaTime"
+;;   :tag "comm" "calendar"
+;;   :added "2022-11-24"
+;;   :ensure t
+;;   ;; Never run the wakatime-cli update check.  wakatime-mode.el carries no
+;;   ;; `lexical-binding' cookie, so the `url-retrieve' callbacks introduced
+;;   ;; upstream in 464ea0ea (2026-05-20, "Automatically download wakatime-cli on
+;;   ;; launch") are not closures: the process filter dies with "void-variable
+;;   ;; callback" every time the check fires.  wakatime-cli is already installed,
+;;   ;; so skip the check and update the binary by hand.  Upstream PR #77 (open
+;;   ;; since 2024) adds the cookie and would fix this.
+;;   :custom (wakatime-update-check-interval . most-positive-fixnum)
+;;   :config (global-wakatime-mode t))
 
 (leaf which-key
   :hook (after-init-hook)
