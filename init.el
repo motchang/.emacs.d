@@ -23,7 +23,8 @@
 
 (setq native-comp-async-report-warnings-errors nil)
 
-(set-frame-font "Source Code Pro 13" nil t)
+;; (set-frame-font "Source Code Pro 12" nil t)
+(set-frame-font "Source Code Pro Medium 12" nil t)
 
 ;; <leaf-install-code>
 (eval-and-compile
@@ -911,7 +912,7 @@
 ;; -----------------------------------------------------------------------------
 ;; Daily Note
 (defcustom open-daily-note-notes-directory
-  (expand-file-name "src/github.dena.jp/koji-okamoto/notes" (getenv "HOME"))
+  (expand-file-name "~/notes" (getenv "HOME"))
   "Base directory for daily notes."
   :type 'directory
   :group 'local)
