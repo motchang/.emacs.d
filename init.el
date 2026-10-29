@@ -475,6 +475,11 @@
   (create-lockfiles . nil)
   (lsp-prefer-capf . t)
   (lsp-file-watch-threshold . 1500)
+  ;; TypeScript 7 is the native (Go) compiler: it ships no tsserver, so ts-ls
+  ;; cannot start, and deno-ls then claims .ts buffers whenever `deno' is on
+  ;; PATH, which breaks xref in Node projects.  Use TS 7's own LSP via tsgo.
+  (lsp-disabled-clients . '(deno-ls ts-ls))
+  (lsp-clients-tsgo-path . "tsc")
   :config
   (leaf lsp-ui
     :emacs>= 26.1
