@@ -24,7 +24,8 @@
 (setq native-comp-async-report-warnings-errors nil)
 
 ;; (set-frame-font "Source Code Pro 12" nil t)
-(set-frame-font "Source Code Pro Medium 12" nil t)
+(when (find-font (font-spec :family "Source Code Pro"))
+  (set-frame-font (font-spec :family "Source Code Pro" :weight 'medium :size 12.0) nil t))
 
 ;; <leaf-install-code>
 (eval-and-compile
